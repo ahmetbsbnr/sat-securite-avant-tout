@@ -1,21 +1,58 @@
 import * as APIsql from "../modele/sqlWeb.js"
 
-//APIsql.sqlWeb.init("http://localhost/sat/","http://localhost/sat/")
+type TEnv = {
+	baseHtml: string,
+	baseApi: string,
+	dbHost: string,
+	dbPort: string,
+	dbName: string,
+	dbUser: string,
+	dbPass: string,
+	dbCharset: string,
+}
 
+// Choix simple pour les étudiants : LOCAL ou distant
+const MODE: "LOCAL" | "distant" = "LOCAL";
 
-//LOCAL
-APIsql.sqlWeb.init("http://localhost:8080/vue/", "http://localhost:8080/api/")
+const ENV: Record<"LOCAL" | "distant", TEnv> = {
+	LOCAL: {
+		baseHtml: "http://localhost:8080/vue/",
+		baseApi: "http://localhost:8080/api/",
+		dbHost: "127.0.0.1",
+		dbPort: "3306",
+		dbName: "sae",
+		dbUser: "root",
+		dbPass: "",
+		dbCharset: "utf8",
+	},
+	distant: {
+		baseHtml: "http://localhost/sat/",
+		baseApi: "http://localhost/sat/",
+		dbHost: "localhost",
+		dbPort: "3306",
+		dbName: "VOTRE_BASE",
+		dbUser: "VOTRE_USER",
+		dbPass: "VOTRE_MDP",
+		dbCharset: "utf8",
+	},
+};
+
+const config = ENV[MODE];
+APIsql.sqlWeb.init(config.baseHtml, config.baseApi)
 
 class Connexion {
 	constructor() {
 		this.init();
 	}
 	init(): void {
-		// à adapter avec voter nom de base et vos identifiants de connexion
-		// APIsql.sqlWeb.bdOpen('localhost','3306','nombase', 'appli','***SUPPRIME***', 'utf8');
-
-		//LOCAL
-		APIsql.sqlWeb.bdOpen('127.0.0.1', '3306', 'sae', 'root', '', 'utf8');
+		APIsql.sqlWeb.bdOpen(
+			config.dbHost,
+			config.dbPort,
+			config.dbName,
+			config.dbUser,
+			config.dbPass,
+			config.dbCharset
+		);
 	}
 }
 let connexion = new Connexion;
