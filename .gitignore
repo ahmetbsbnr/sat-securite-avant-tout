@@ -1,16 +1,12 @@
 # Node dependencies
 PRODUCTION/node_modules/
 
-# phpMyAdmin generated cache
-BDD/phpmyadmin/tmp/twig/
-
 # Local verification/debug artifacts
 verify_*.txt
 *_status.txt
 repo_status*.txt
 root_files.txt
 production_files.txt
-debug_start_dev.log
 repo_status.txt
 
 # Runtime logs
