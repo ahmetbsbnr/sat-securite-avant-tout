@@ -1,16 +1,27 @@
-import * as APIsql from "../modele/sqlWeb.js"
+import { sqlWeb } from "./sqlWeb.js";
 
-APIsql.sqlWeb.init("http://localhost/sat/","http://localhost/sat/")
+// Initialisation des chemins de l'API
+sqlWeb.init(
+    "http://localhost/sat/",
+    "http://localhost/sat/"
+);
 
 class Connexion {
-	constructor() {
-		this.init();
-	}
-	init():void {
-		// à adapter avec voter nom de base et vos identifiants de connexion
-		APIsql.sqlWeb.bdOpen('localhost','3306','bdsat', 'appli','***SUPPRIME***', 'utf8');
-	}
+    constructor() {
+        this.init();
+    }
+    
+    init(): void {
+        sqlWeb.bdOpen(
+            'localhost',
+            '3306',
+            'bdsat',   // Nom de la base
+            'appli',      // Utilisateur (si ça plante, essaie juste 'utilisateur')
+            '***SUPPRIME***',       // Mot de passe
+            'utf8'
+        );
+    }
 }
-let connexion = new Connexion;
 
-export {connexion, APIsql}
+// On lance la connexion immédiatement
+export const connexion = new Connexion();
