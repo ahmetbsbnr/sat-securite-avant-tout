@@ -64,4 +64,3 @@ class SQLWeb {
 
 let sqlWeb = new SQLWeb()
 export { sqlWeb, TtabAsso, TdataSet }
-
