@@ -52,14 +52,33 @@ tbody td {
 #btnAjt {
     border: 2px solid #a389d4;
     color: #a389d4;
+    transition: 0.3s ease;
 }
 #btnEdt {
     border: 2px solid #8994a3;
     color: #8994a3;
+    transition: 0.3s ease;
 }
 #btnSupp {
     border: 2px solid #f29090;
     color: #f29090;
+    transition: 0.3s ease;
+}
+
+#btnAjt:hover {
+    border: 2px solid purple;
+    background-color: #a389d4;
+    color: white;
+}
+#btnEdt:hover {
+    border: 2px solid grey;
+    background-color: #8994a3;
+    color: white;
+}
+#btnSupp:hover {
+    border: 2px solid red;
+    background-color: #f29090;
+    color: white;
 }
 
 /* Section Nouvel Intervention */
@@ -160,26 +179,39 @@ tbody td {
 .divaction_inner {
     margin-top: 10px;
 }
-.btn_presta_purp {
-    border: 1px solid #a389d4;
+#btnNvlPresta {
+    border: 2px solid #a389d4;
     color: #a389d4;
     background: white;
-    padding: 5px 10px;
-    cursor: pointer;
+    transition: 0.3s ease;
 }
-.btn_presta_grey {
-    border: 1px solid #8994a3;
+#btnModifPresta {
+    border: 2px solid #8994a3;
     color: #8994a3;
     background: white;
-    padding: 5px 10px;
-    cursor: pointer;
+    transition: 0.3s ease;
 }
-.btn_presta_red {
-    border: 1px solid #f29090;
+#btnSuppPresta {
+    border: 2px solid #f29090;
     color: #f29090;
     background: white;
-    padding: 5px 10px;
-    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+#btnNvlPresta:hover {
+    border: 2px solid purple;
+    background-color: #a389d4;
+    color: white;
+}
+#btnModifPresta:hover {
+    border: 2px solid grey;
+    background-color: #8994a3;
+    color: white;
+}
+#btnSuppPresta:hover {
+    border: 2px solid red;
+    background-color: #f29090;
+    color: white;
 }
 
 /* Actions Finales */
@@ -188,17 +220,32 @@ tbody td {
     margin-top: 20px;
 }
 
-#valider {
-    border: 1px solid #719ece;
+#btnValider {
+    border: 2px solid #719ece;
     color: #719ece;
     background: white;
     padding: 10px 30px;
     cursor: pointer;
+    transition: 0.3s ease;
 }
-#annuler {
-    border: 1px solid #f29090;
+
+#btnValider:hover {
+    border: 2px solid purple;
+    background-color: #a389d4;
+    color: white;
+}
+
+#btnAnnuler {
+    border: 2px solid #f29090;
     color: #f29090;
     background: white;
     padding: 10px 30px;
     cursor: pointer;
+    transition: 0.3s ease;
+}
+
+#btnAnnuler:hover {
+    border: 2px solid red;
+    background-color: #f29090;
+    color: white;
 }
