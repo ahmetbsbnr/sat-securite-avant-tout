@@ -15,6 +15,7 @@ export class ControleurSae {
         this.chargerInterventions();
 
         this._form.btnAjt.onclick = () => this.afficherNvlInter();
+        this._form.btnEdt.onclick = () => this.prepaModifInter();
     }
 
     get form() {
@@ -104,7 +105,26 @@ export class ControleurSae {
     }
 
     annulerNvlInter(): void {
-        //
+        const champsRempli: (HTMLInputElement | HTMLTextAreaElement)[] = [
+            this.form.numInter,
+            this.form.dateInter,
+            this.form.objetInter,
+            this.form.observations,
+            this.form.numContrat,
+            this.form.dateCreaContrat,
+            this.form.infoSite,
+            this.form.numClient,
+            this.form.nomClient,
+            this.form.prenomClient,
+            this.form.telClient,
+            this.form.mailClient,
+        ];
+
+        for (let champ of champsRempli) {
+            champ.value = "";
+        }
+
+        this._form.divNvlInter.hidden = true;
     }
 
     verifierSaisie(): void {
@@ -134,8 +154,90 @@ export class ControleurSae {
         if (bon === true) {
             this.ajouterInter();
         }
-        //else{}
+        //else{afficher message "pas bon"}
     }
 
-    ajouterInter(): void {}
+    ajouterInter(): void {
+        const requete =
+            "INSERT INTO intervention (num_interv, date_interv, objet_interv, obs_interv, num_cont) VALUES (?, ?, ?, ?, ?)";
+
+        const parametres = [
+            this._form.numInter.value,
+            this._form.dateInter.value,
+            this._form.objetInter.value,
+            this._form.observations.value,
+            this._form.numContrat.value,
+        ];
+
+        const succes = sqlWeb.SQLexec(requete, parametres);
+
+        if (succes) {
+            this._form.divNvlInter.hidden = true;
+            this.chargerInterventions();
+        } else {
+            //message que ça n'a pas marché ?
+        }
+    }
+
+    prepaModifInter(): void {
+        const table = document.querySelector(
+            "#table_intervention tbody",
+        ) as HTMLTableSectionElement;
+
+        const ligneSelectionne = table.querySelector(
+            "tr.selected",
+        ) as HTMLTableRowElement;
+
+        if (!ligneSelectionne) {
+            //afficher message "vous n'avez rien séléctionner"(pas d'alerte mais text HTML)
+        } else {
+            const numInter = ligneSelectionne.cells[0].textContent; // Généralement index 0
+            const numContrat = ligneSelectionne.cells[2].textContent;
+            const numClient = ligneSelectionne.cells[4].textContent;
+
+            this.form.numInter.value = numInter;
+            this.form.numContrat.value = numContrat;
+            this.form.numClient.value = numClient;
+
+            let data;
+
+            data = sqlWeb.SQLloadData(
+                "SELECT date_interv FROM intervention WHERE num_interv = ?",
+                [numInter],
+            );
+            this.form.dateInter.value = data[0]["date_interv"];
+
+            data = sqlWeb.SQLloadData(
+                "SELECT objet_interv FROM intervention WHERE num_interv = ?",
+                [numInter],
+            );
+            this.form.objetInter.value = data[0]["objet_interv"];
+
+            data = sqlWeb.SQLloadData(
+                "SELECT obs_interv FROM intervention WHERE num_interv = ?",
+                [numInter],
+            );
+            this.form.observations.value = data[0]["obs_interv"];
+
+            data = sqlWeb.SQLloadData(
+                "SELECT nom_cli FROM client WHERE num_cli = ?",
+                [numClient],
+            );
+            this.form.nomClient.value = data[0]["nom_cli"];
+
+            data = sqlWeb.SQLloadData(
+                "SELECT prenom_cli FROM client WHERE num_cli = ?",
+                [numClient],
+            );
+            this.form.prenomClient.value = data[0]["prenom_cli"];
+
+            data = sqlWeb.SQLloadData(
+                "SELECT mel_cli FROM client WHERE num_cli = ?",
+                [numClient],
+            );
+            this.form.mailClient.value = data[0]["mel_cli"];
+
+            this.afficherNvlInter();
+        }
+    }
 }
