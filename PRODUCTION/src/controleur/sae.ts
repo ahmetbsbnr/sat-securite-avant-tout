@@ -21,13 +21,13 @@ const sae = new ControleurSae({
     numContrat: document.getElementById("numContrat") as HTMLInputElement,
     dateCreaContrat: document.getElementById(
         "dateCreaContrat",
-    ) as HTMLInputElement,
+    ) as HTMLTextAreaElement,
     infoSite: document.getElementById("infoSite") as HTMLTextAreaElement,
     numClient: document.getElementById("numClient") as HTMLInputElement,
-    nomClient: document.getElementById("nomClient") as HTMLInputElement,
-    prenomClient: document.getElementById("prenomClient") as HTMLInputElement,
-    telClient: document.getElementById("telClient") as HTMLInputElement,
-    mailClient: document.getElementById("mailClient") as HTMLInputElement,
+    nomClient: document.getElementById("nomClient") as HTMLTextAreaElement,
+    prenomClient: document.getElementById("prenomClient") as HTMLTextAreaElement,
+    telClient: document.getElementById("telClient") as HTMLTextAreaElement,
+    mailClient: document.getElementById("mailClient") as HTMLTextAreaElement,
 
     // Prestations
     btnNvlPresta: document.getElementById("btnNvlPresta") as HTMLInputElement,

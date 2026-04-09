@@ -1,4 +1,4 @@
-export type saeForm = {
+export type SaeForm = {
     // Boutons de navigation
     btnAjt: HTMLInputElement;
     btnEdt: HTMLInputElement;
@@ -28,7 +28,7 @@ export type saeForm = {
     btnModifPresta: HTMLInputElement;
     btnSuppPresta: HTMLInputElement;
 
-    // Champs de calcul (Inputs en readonly)
+    // Champs de calcul
     totalHT: HTMLInputElement;
     totalTVA: HTMLInputElement;
     totalTTC: HTMLInputElement;

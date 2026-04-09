@@ -100,10 +100,40 @@ export class ControleurSae {
     afficherNvlInter(): void {
         this._form.divNvlInter.hidden = false;
 
+        if (this._form.numContrat.value !== "") () => this.ajouterInfoContrat();
+
         this._form.btnValider.onclick = () => this.verifierSaisie();
         this._form.btnAnnuler.onclick = () => this.annulerNvlInter();
     }
 
+    ajouterInfoContrat(): void {
+        const numContrat = this._form.numContrat.value.trim()
+
+        this._form.dateCreaContrat.value = (sqlWeb.SQLloadData(
+            "SELECT date_cont FROM contrat WHERE num_cont = ?",
+            [numContrat],
+        )).toString()
+        this._form.numClient.value = (sqlWeb.SQLloadData(
+            "SELECT num_cli FROM client JOIN contrat WHERE num_cont = ?",
+            [numContrat],
+        )).toString()
+        this._form.nomClient.value = (sqlWeb.SQLloadData(
+            "SELECT nom_cli FROM client JOIN contrat WHERE num_cont = ?",
+            [numContrat],
+        )).toString()
+        this._form.prenomClient.value = (sqlWeb.SQLloadData(
+            "SELECT prenom_cli FROM client JOIN contrat WHERE num_cont = ?",
+            [numContrat],
+        )).toString()
+        this._form.telClient.value = (sqlWeb.SQLloadData(
+            "SELECT tel_cli FROM client JOIN contrat WHERE num_cont = ?",
+            [numContrat],
+        )).toString()
+        this._form.mailClient.value = (sqlWeb.SQLloadData(
+            "SELECT mel_cli FROM client JOIN contrat WHERE num_cont = ?",
+            [numContrat],
+        )).toString()
+    }
     annulerNvlInter(): void {
         const champsRempli: (HTMLInputElement | HTMLTextAreaElement)[] = [
             this.form.numInter,
@@ -134,13 +164,6 @@ export class ControleurSae {
             this.form.objetInter,
             this.form.observations,
             this.form.numContrat,
-            this.form.dateCreaContrat,
-            this.form.infoSite,
-            this.form.numClient,
-            this.form.nomClient,
-            this.form.prenomClient,
-            this.form.telClient,
-            this.form.mailClient,
         ];
 
         let bon = true;
@@ -191,7 +214,7 @@ export class ControleurSae {
         if (!ligneSelectionne) {
             //afficher message "vous n'avez rien séléctionner"(pas d'alerte mais text HTML)
         } else {
-            const numInter = ligneSelectionne.cells[0].textContent; // Généralement index 0
+            const numInter = ligneSelectionne.cells[0].textContent;
             const numContrat = ligneSelectionne.cells[2].textContent;
             const numClient = ligneSelectionne.cells[4].textContent;
 
