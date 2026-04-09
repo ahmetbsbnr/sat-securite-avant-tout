@@ -15,13 +15,13 @@ export type SaeForm = {
 
     // Section Contrat Client
     numContrat: HTMLInputElement;
-    dateCreaContrat: HTMLInputElement;
+    dateCreaContrat: HTMLTextAreaElement;
     infoSite: HTMLTextAreaElement;
     numClient: HTMLInputElement;
-    nomClient: HTMLInputElement;
-    prenomClient: HTMLInputElement;
-    telClient: HTMLInputElement;
-    mailClient: HTMLInputElement;
+    nomClient: HTMLTextAreaElement;
+    prenomClient: HTMLTextAreaElement;
+    telClient: HTMLTextAreaElement;
+    mailClient: HTMLTextAreaElement;
 
     // Boutons de la section Prestation
     btnNvlPresta: HTMLInputElement;
