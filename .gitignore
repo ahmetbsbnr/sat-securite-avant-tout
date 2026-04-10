@@ -1,16 +1,2 @@
-# Node dependencies
-PRODUCTION/node_modules/
-
-# Local verification/debug artifacts
-verify_*.txt
-*_status.txt
-repo_status*.txt
-root_files.txt
-production_files.txt
-repo_status.txt
-
-# Runtime logs
-*.log
-
-# macOS metadata
+.vscode
 .DS_Store
