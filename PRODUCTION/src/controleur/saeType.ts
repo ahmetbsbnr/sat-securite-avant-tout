@@ -28,7 +28,7 @@ export type SaeForm = {
     btnModifPresta: HTMLInputElement;
     btnSuppPresta: HTMLInputElement;
 
-    // Champs de calcul
+    // Champs de calcul (Inputs en readonly)
     totalHT: HTMLInputElement;
     totalTVA: HTMLInputElement;
     totalTTC: HTMLInputElement;

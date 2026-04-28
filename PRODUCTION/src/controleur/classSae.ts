@@ -16,6 +16,7 @@ export class ControleurSae {
 
         this._form.btnAjt.onclick = () => this.afficherNvlInter();
         this._form.btnEdt.onclick = () => this.prepaModifInter();
+        this._form.btnAnnuler.onclick = () => this.init();
     }
 
     get form() {
@@ -107,32 +108,43 @@ export class ControleurSae {
     }
 
     ajouterInfoContrat(): void {
-        const numContrat = this._form.numContrat.value.trim()
+        const numContrat = this._form.numContrat.value.trim();
 
-        this._form.dateCreaContrat.value = (sqlWeb.SQLloadData(
-            "SELECT date_cont FROM contrat WHERE num_cont = ?",
-            [numContrat],
-        )).toString()
-        this._form.numClient.value = (sqlWeb.SQLloadData(
-            "SELECT num_cli FROM client JOIN contrat WHERE num_cont = ?",
-            [numContrat],
-        )).toString()
-        this._form.nomClient.value = (sqlWeb.SQLloadData(
-            "SELECT nom_cli FROM client JOIN contrat WHERE num_cont = ?",
-            [numContrat],
-        )).toString()
-        this._form.prenomClient.value = (sqlWeb.SQLloadData(
-            "SELECT prenom_cli FROM client JOIN contrat WHERE num_cont = ?",
-            [numContrat],
-        )).toString()
-        this._form.telClient.value = (sqlWeb.SQLloadData(
-            "SELECT tel_cli FROM client JOIN contrat WHERE num_cont = ?",
-            [numContrat],
-        )).toString()
-        this._form.mailClient.value = (sqlWeb.SQLloadData(
-            "SELECT mel_cli FROM client JOIN contrat WHERE num_cont = ?",
-            [numContrat],
-        )).toString()
+        this._form.dateCreaContrat.value = sqlWeb
+            .SQLloadData("SELECT date_cont FROM contrat WHERE num_cont = ?", [
+                numContrat,
+            ])
+            .toString();
+        this._form.numClient.value = sqlWeb
+            .SQLloadData(
+                "SELECT num_cli FROM client JOIN contrat WHERE num_cont = ?",
+                [numContrat],
+            )
+            .toString();
+        this._form.nomClient.value = sqlWeb
+            .SQLloadData(
+                "SELECT nom_cli FROM client JOIN contrat WHERE num_cont = ?",
+                [numContrat],
+            )
+            .toString();
+        this._form.prenomClient.value = sqlWeb
+            .SQLloadData(
+                "SELECT prenom_cli FROM client JOIN contrat WHERE num_cont = ?",
+                [numContrat],
+            )
+            .toString();
+        this._form.telClient.value = sqlWeb
+            .SQLloadData(
+                "SELECT tel_cli FROM client JOIN contrat WHERE num_cont = ?",
+                [numContrat],
+            )
+            .toString();
+        this._form.mailClient.value = sqlWeb
+            .SQLloadData(
+                "SELECT mel_cli FROM client JOIN contrat WHERE num_cont = ?",
+                [numContrat],
+            )
+            .toString();
     }
     annulerNvlInter(): void {
         const champsRempli: (HTMLInputElement | HTMLTextAreaElement)[] = [
