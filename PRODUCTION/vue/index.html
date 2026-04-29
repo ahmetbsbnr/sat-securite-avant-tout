@@ -1,186 +1,152 @@
 <!doctype html>
 <html>
-    <head>
-        <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-        <title>Gestionnaire des interventions</title>
-        <link type="text/css" rel="stylesheet" href="./css/style.css" />
-        <script type="module" src="../controleur/sae.js"></script>
-    </head>
 
-    <body>
-        <div id="div_intervention_titre" class="divtitre">
-            Gestionnaire des interventions
-        </div>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <title>Gestionnaire des interventions</title>
+    <link type="text/css" rel="stylesheet" href="./css/style.css" />
+    <script type="module" src="../controleur/sae.js"></script>
+</head>
 
-        <table id="table_intervention">
-            <thead>
-                <tr>
-                    <th>Num Intervention</th>
-                    <th>Date Intervention</th>
-                    <th>Num Contrat</th>
-                    <th>Commune (Site)</th>
-                    <th>Num client</th>
-                    <th>Nom client</th>
-                    <th>Total TTC (€)</th>
-                </tr>
-            </thead>
-            <tbody> </tbody>
-        </table>
+<body>
+    <div id="div_intervention_titre" class="divtitre">
+        Gestionnaire des interventions
+    </div>
 
-        <div class="divaction">
-            <input
-                id="btnAjt"
-                type="button"
-                value="Ajouter une nouvelle intervention"
-                class="btn"
-            />
-            <input id="btnEdt" type="button" value="Modifier" class="btn" />
-            <input id="btnSupp" type="button" value="Supprimer" class="btn" />
-        </div>
+    <table id="table_intervention">
+        <thead>
+            <tr>
+                <th>Num Intervention</th>
+                <th>Date Intervention</th>
+                <th>Num Contrat</th>
+                <th>Commune (Site)</th>
+                <th>Num client</th>
+                <th>Nom client</th>
+                <th>Total TTC (€)</th>
+            </tr>
+        </thead>
+        <tbody> </tbody>
+    </table>
 
-        <div id="nvlInter">
-            <h2>Nouvel Intervention</h2>
+    <div class="divaction">
+        <input id="btnAjt" type="button" value="Ajouter une nouvelle intervention" class="btn" />
+        <input id="btnEdt" type="button" value="Modifier" class="btn" />
+        <input id="btnSupp" type="button" value="Supprimer" class="btn" />
+    </div>
 
-            <div id="intervention" class="infoInter">
-                <h3>Intervention</h3>
-                <div class="moit">
-                    <div>
-                        <div class="txtinput">
-                            <p>Numero d'intervention</p>
-                            <input type="text" id="numInter" />
-                        </div>
-                        <div class="txtinput">
-                            <p>Date de l'intervention</p>
-                            <input
-                                type="text"
-                                id="dateInter"
-                                placeholder="jj/mm/aaaa"
-                            />
-                        </div>
-                        <div class="txtinput">
-                            <p>Objet de l'intervention</p>
-                            <input type="text" id="objetInter" />
-                        </div>
+    <div id="nvlInter">
+        <h2>Nouvel Intervention</h2>
+
+        <div id="intervention" class="infoInter">
+            <h3>Intervention</h3>
+            <div class="moit">
+                <div>
+                    <div class="txtinput">
+                        <p>Numero d'intervention</p>
+                        <input type="text" id="numInter" />
                     </div>
-                    <div>
-                        <div class="txtinput">
-                            <p>Observations</p>
-                            <textarea id="observations" rows="5"></textarea>
-                        </div>
+                    <div class="txtinput">
+                        <p>Date de l'intervention</p>
+                        <input type="text" id="dateInter" placeholder="jj/mm/aaaa" />
+                    </div>
+                    <div class="txtinput">
+                        <p>Objet de l'intervention</p>
+                        <input type="text" id="objetInter" />
+                    </div>
+                </div>
+                <div>
+                    <div class="txtinput">
+                        <p>Observations</p>
+                        <textarea id="observations" rows="5"></textarea>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div id="info_contrat" class="infoInter">
-                <h3>Contrat</h3>
-                <div class="moit">
-                    <div>
-                        <div class="txtinput">
-                            <p>Numero du contrat</p>
-                            <input type="text" id="numContrat" />
-                        </div>
-                        <div class="txtinput">
-                            <p>Date création du contrat</p>
-                            <textarea id="dateCreaContrat" readonly></textarea>
-                        </div>
-                        <div class="txtinput">
-                            <p>Informations du sites</p>
-                            <textarea id="infoSite" rows="5" readonly></textarea>
-                        </div>
+        <div id="info_contrat" class="infoInter">
+            <h3>Contrat</h3>
+            <div class="moit">
+                <div>
+                    <div class="txtinput">
+                        <p>Numero du contrat</p>
+                        <input type="text" id="numContrat" />
                     </div>
-                    <div>
-                        <div class="txtinput">
-                            <p>Numero client</p>
-                            <textarea id="numClient" readonly rows="1"></textarea>
-                        </div>
-                        <div class="txtinput">
-                            <p>Nom du client</p>
-                            <textarea id="nomClient" readonly rows="1"></textarea>
-                        </div>
-                        <div class="txtinput">
-                            <p>Prenom du client</p>
-                            <textarea id="prenomClient" readonly rows="1"></textarea>
-                        </div>
-                        <div class="txtinput">
-                            <p>Téléphone</p>
-                            <textarea id="telClient" readonly rows="1"></textarea>
-                        </div>
-                        <div class="txtinput">
-                            <p>Adresse e-mail</p>
-                            <textarea id="mailClient" readonly rows="1"></textarea>
-                        </div>
+                    <div class="txtinput">
+                        <p>Date création du contrat</p>
+                        <textarea id="dateCreaContrat" readonly></textarea>
+                    </div>
+                    <div class="txtinput">
+                        <p>Informations du sites</p>
+                        <textarea id="infoSite" rows="5" readonly></textarea>
                     </div>
                 </div>
-            </div>
-
-            <div id="prestation_section" class="infoInter">
-                <h3>Prestation</h3>
-                <div class="moit_prestation">
-                    <div class="tableau_cote">
-                        <table id="table_prestations">
-                            <thead>
-                                <tr>
-                                    <th>Code</th>
-                                    <th>Libellé</th>
-                                    <th>Prix Unitaire HT (€)</th>
-                                    <th>Quantité</th>
-                                    <th>Montant HT (€)</th>
-                                </tr>
-                            </thead>
-                            <tbody> </tbody>
-                        </table>
-                        <div class="divaction_inner">
-                            <input
-                                id="btnNvlPresta"
-                                type="button"
-                                value="Nouvelle prestation"
-                                class="btn"
-                            />
-                            <input
-                                id="btnModifPresta"
-                                type="button"
-                                value="Modifier"
-                                class="btn"
-                            />
-                            <input
-                                id="btnSuppPresta"
-                                type="button"
-                                value="Supprimer"
-                                class="btn"
-                            />
-                        </div>
+                <div>
+                    <div class="txtinput">
+                        <p>Numero client</p>
+                        <textarea id="numClient" readonly rows="1"></textarea>
                     </div>
-
-                    <div class="resume_financier">
-                        <div class="total_label"
-                            >Total de(s) intervention(s)</div
-                        >
-                        <div class="grid_total">
-                            <p>Total HT (€)</p>
-                            <input type="text" id="totalHT" readonly />
-                            <p>TVA 10% (€)</p>
-                            <input type="text" id="totalTVA" readonly />
-                            <p>Total TTC (€)</p>
-                            <input type="text" id="totalTTC" readonly />
-                        </div>
+                    <div class="txtinput">
+                        <p>Nom du client</p>
+                        <textarea id="nomClient" readonly rows="1"></textarea>
+                    </div>
+                    <div class="txtinput">
+                        <p>Prenom du client</p>
+                        <textarea id="prenomClient" readonly rows="1"></textarea>
+                    </div>
+                    <div class="txtinput">
+                        <p>Téléphone</p>
+                        <textarea id="telClient" readonly rows="1"></textarea>
+                    </div>
+                    <div class="txtinput">
+                        <p>Adresse e-mail</p>
+                        <textarea id="mailClient" readonly rows="1"></textarea>
                     </div>
                 </div>
-            </div>
-
-            <div class="final_actions">
-                <input
-                    id="btnValider"
-                    class="btn"
-                    type="button"
-                    value="Valider"
-                />
-                <input
-                    id="btnAnnuler"
-                    class="btn"
-                    type="button"
-                    value="Annuler"
-                />
             </div>
         </div>
-    </body>
+
+        <div id="prestation_section" class="infoInter">
+            <h3>Prestation</h3>
+            <div class="moit_prestation">
+                <div class="tableau_cote">
+                    <table id="table_prestations">
+                        <thead>
+                            <tr>
+                                <th>Code</th>
+                                <th>Libellé</th>
+                                <th>Prix Unitaire HT (€)</th>
+                                <th>Quantité</th>
+                                <th>Montant HT (€)</th>
+                            </tr>
+                        </thead>
+                        <tbody> </tbody>
+                    </table>
+                    <div class="divaction_inner">
+                        <input id="btnNvlPresta" type="button" value="Nouvelle prestation" class="btn" />
+                        <input id="btnModifPresta" type="button" value="Modifier" class="btn" />
+                        <input id="btnSuppPresta" type="button" value="Supprimer" class="btn" />
+                    </div>
+                </div>
+
+                <div class="resume_financier">
+                    <div class="total_label">Total de(s) intervention(s)</div>
+                    <div class="grid_total">
+                        <p>Total HT (€)</p>
+                        <input type="text" id="totalHT" readonly />
+                        <p>TVA 10% (€)</p>
+                        <input type="text" id="totalTVA" readonly />
+                        <p>Total TTC (€)</p>
+                        <input type="text" id="totalTTC" readonly />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="final_actions">
+            <input id="btnValider" class="btn" type="button" value="Valider" />
+            <input id="btnAnnuler" class="btn" type="button" value="Annuler" />
+        </div>
+    </div>
+</body>
+
 </html>
