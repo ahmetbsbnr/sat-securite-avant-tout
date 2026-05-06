@@ -5,7 +5,6 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
     <title>Gestionnaire des interventions</title>
     <link type="text/css" rel="stylesheet" href="./css/style.css" />
-    <script type="module" src="../controleur/sae.js"></script>
 </head>
 
 <body>
@@ -25,7 +24,7 @@
                 <th>Total TTC (€)</th>
             </tr>
         </thead>
-        <tbody> </tbody>
+        <tbody></tbody>
     </table>
 
     <div class="divaction">
@@ -37,6 +36,7 @@
     <div id="nvlInter">
         <h2>Nouvel Intervention</h2>
 
+        <!-- ===== Section INTERVENTION ===== -->
         <div id="intervention" class="infoInter">
             <h3>Intervention</h3>
             <div class="moit">
@@ -47,7 +47,7 @@
                     </div>
                     <div class="txtinput">
                         <p>Date de l'intervention</p>
-                        <input type="text" id="dateInter" placeholder="jj/mm/aaaa" />
+                        <input type="date" id="dateInter" />
                     </div>
                     <div class="txtinput">
                         <p>Objet de l'intervention</p>
@@ -55,14 +55,15 @@
                     </div>
                 </div>
                 <div>
-                    <div class="txtinput">
+                    <div class="txtinput txtinput_obs">
                         <p>Observations</p>
-                        <textarea id="observations" rows="5"></textarea>
+                        <textarea id="observations" rows="6"></textarea>
                     </div>
                 </div>
             </div>
         </div>
 
+        <!-- ===== Section CONTRAT ===== -->
         <div id="info_contrat" class="infoInter">
             <h3>Contrat</h3>
             <div class="moit">
@@ -73,11 +74,11 @@
                     </div>
                     <div class="txtinput">
                         <p>Date création du contrat</p>
-                        <textarea id="dateCreaContrat" readonly></textarea>
+                        <textarea id="dateCreaContrat" readonly rows="1"></textarea>
                     </div>
                     <div class="txtinput">
-                        <p>Informations du sites</p>
-                        <textarea id="infoSite" rows="5" readonly></textarea>
+                        <p>Informations du site</p>
+                        <textarea id="infoSite" rows="4" readonly></textarea>
                     </div>
                 </div>
                 <div>
@@ -105,6 +106,7 @@
             </div>
         </div>
 
+        <!-- ===== Section PRESTATION ===== -->
         <div id="prestation_section" class="infoInter">
             <h3>Prestation</h3>
             <div class="moit_prestation">
@@ -119,12 +121,28 @@
                                 <th>Montant HT (€)</th>
                             </tr>
                         </thead>
-                        <tbody> </tbody>
+                        <tbody></tbody>
                     </table>
                     <div class="divaction_inner">
                         <input id="btnNvlPresta" type="button" value="Nouvelle prestation" class="btn" />
                         <input id="btnModifPresta" type="button" value="Modifier" class="btn" />
                         <input id="btnSuppPresta" type="button" value="Supprimer" class="btn" />
+                    </div>
+
+                    <!-- Sous-formulaire pour ajouter/modifier une prestation -->
+                    <div id="divPrestationForm" hidden>
+                        <div class="txtinput">
+                            <p>Choisir une prestation</p>
+                            <select id="selectPrestation"></select>
+                        </div>
+                        <div class="txtinput">
+                            <p>Saisir une quantité</p>
+                            <input type="number" id="qtePrestation" min="1" value="1" />
+                        </div>
+                        <div class="presta_actions_mini">
+                            <button id="btnValiderPresta" type="button" class="btn-icon check">✔</button>
+                            <button id="btnAnnulerPresta" type="button" class="btn-icon cross">✖</button>
+                        </div>
                     </div>
                 </div>
 
@@ -142,11 +160,14 @@
             </div>
         </div>
 
+        <!-- ===== Actions finales ===== -->
         <div class="final_actions">
             <input id="btnValider" class="btn" type="button" value="Valider" />
             <input id="btnAnnuler" class="btn" type="button" value="Annuler" />
         </div>
     </div>
+
+    <script type="module" src="../controleur/sae.js"></script>
 </body>
 
 </html>

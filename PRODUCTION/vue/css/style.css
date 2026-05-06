@@ -1,52 +1,77 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #ffffff;
+    background-color: #f0f2f5;
     color: #555;
-    margin: 20px;
+    margin: 0;
+    padding: 15px;
 }
 
-/* Titre Principal */
+/* ============================
+   Titre Principal
+   ============================ */
 .divtitre {
     text-align: center;
-    font-size: 1.5rem;
-    padding: 20px;
-    color: #7a8a99;
+    font-size: 1.1rem;
+    padding: 10px;
+    color: #444;
+    background-color: #cbd5e0;
+    font-weight: bold;
 }
 
-/* Tableaux */
+/* ============================
+   Tableaux
+   ============================ */
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     border: 1px solid #d1d9e0;
+    font-size: 0.85rem;
 }
 
 thead th {
     background-color: #7a8a99;
     color: white;
-    padding: 10px;
+    padding: 6px 8px;
     text-align: left;
     border: 1px solid #d1d9e0;
+    font-size: 0.8rem;
+    white-space: nowrap;
 }
 
 tbody td {
-    padding: 8px;
+    padding: 4px 8px;
     border: 1px solid #d1d9e0;
 }
 
-/* Boutons page principale */
+tbody tr {
+    cursor: pointer;
+}
+
+tbody tr:hover {
+    background-color: #e8f0fe;
+}
+
+.selected {
+    background-color: #78c8ff;
+}
+
+/* ============================
+   Boutons page principale
+   ============================ */
 .divaction {
     text-align: center;
-    margin: 20px 0;
+    margin: 10px 0;
 }
 
 .btn {
-    padding: 8px 20px;
+    padding: 5px 15px;
     background: white;
     cursor: pointer;
     border-radius: 4px;
     font-weight: bold;
-    margin: 0 5px;
+    margin: 0 3px;
+    font-size: 0.8rem;
 }
 
 #btnAjt {
@@ -66,119 +91,186 @@ tbody td {
 }
 
 #btnAjt:hover {
-    border: 2px solid purple;
     background-color: #a389d4;
     color: white;
 }
 #btnEdt:hover {
-    border: 2px solid grey;
     background-color: #8994a3;
     color: white;
 }
 #btnSupp:hover {
-    border: 2px solid red;
     background-color: #f29090;
     color: white;
 }
 
-/* Section Nouvel Intervention */
+/* ============================
+   Section Nouvel Intervention
+   ============================ */
 #nvlInter h2 {
     background-color: #cbd5e0;
     text-align: center;
     padding: 10px;
-    font-size: 1.2rem;
+    font-size: 0.95rem;
     color: #444;
+    margin: 20px 0 0 0;
+    font-weight: bold;
 }
 
+/* ============================
+   Sections (Intervention, Contrat, Prestation)
+   ============================ */
 .infoInter {
-    border: 2px solid #d1d9e0;
-    margin: 20px 0;
-    padding: 20px;
+    border: 1px solid #d1d9e0;
+    margin: 25px 0 10px 0;
+    padding: 20px 15px 15px 15px;
     background-color: #f8f9fa;
-    border-radius: 4px;
+    border-radius: 3px;
+    position: relative;
 }
 
 .infoInter h3 {
     background-color: #cbd5e0;
     display: inline-block;
-    padding: 5px 20px;
-    margin-top: -35px;
-    margin-left: -5px;
-    font-size: 0.9rem;
+    padding: 3px 15px;
+    font-size: 0.8rem;
     border: 1px solid #d1d9e0;
+    border-radius: 3px;
+    position: absolute;
+    top: -12px;
+    left: 20px;
+    margin: 0;
+    color: #444;
 }
 
-/* Formulaire */
+/* ============================
+   Formulaire (grille label + input)
+   ============================ */
 .moit {
     display: flex;
-    justify-content: space-around;
-    gap: 40px;
+    gap: 20px;
+}
+
+.moit > div {
+    flex: 1;
 }
 
 .txtinput {
     display: flex;
-    align-items: center;
-    margin-bottom: 10px;
+    align-items: flex-start;
+    margin-bottom: 6px;
 }
 
 .txtinput p {
-    width: 180px;
+    width: 160px;
+    min-width: 160px;
     margin: 0;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
+    padding-top: 5px;
 }
 
 .txtinput input,
 .txtinput textarea {
     border: 1px solid #d1d9e0;
-    padding: 5px;
-    width: 200px;
+    padding: 4px 6px;
+    width: 220px; /* Largeur fixe pour correspondre à la maquette */
+    font-size: 0.8rem;
+    font-family: inherit;
+    box-sizing: border-box;
 }
 
-/* Section Prestation Spécifique */
+.txtinput input {
+    height: 28px;
+}
+
+.txtinput textarea {
+    resize: none;
+}
+
+.txtinput textarea[readonly] {
+    background-color: #f9f9f9; /* Plus clair pour les textareas readonly */
+}
+
+/* Observations : label au dessus, prend toute la largeur */
+.txtinput_obs {
+    flex-direction: column;
+    align-items: flex-start;
+    height: 100%;
+}
+
+.txtinput_obs p {
+    padding-top: 0;
+    margin-bottom: 5px;
+}
+
+.txtinput_obs textarea {
+    width: 100%;
+    height: calc(100% - 25px);
+    min-height: 100px;
+}
+
+/* ============================
+   Section Prestation : côte à côte
+   ============================ */
 .moit_prestation {
     display: flex;
-    gap: 20px;
+    gap: 15px;
+    align-items: flex-start;
 }
 
 .tableau_cote {
     flex: 2;
 }
+
 .resume_financier {
     flex: 1;
     border: 1px solid #d1d9e0;
-    padding: 15px;
-    background: #e9ecef;
+    padding: 10px;
+    background: #f0f2f5;
+    border-radius: 3px;
 }
 
 .total_label {
     background: white;
     border: 1px solid #d1d9e0;
     text-align: center;
-    padding: 15px;
-    margin-bottom: 15px;
+    padding: 8px;
+    margin-bottom: 10px;
+    font-size: 0.8rem;
+    font-weight: bold;
 }
 
 .grid_total {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: auto 1fr;
     align-items: center;
-    gap: 10px;
+    gap: 5px 8px;
 }
 
 .grid_total p {
     margin: 0;
     font-weight: bold;
-}
-.grid_total input {
-    width: 100%;
-    padding: 5px;
-    border: 1px solid #d1d9e0;
+    font-size: 0.8rem;
+    text-align: right;
 }
 
-/* Boutons Prestation */
-.divaction_inner {
-    margin-top: 10px;
+.grid_total input {
+    width: 100%;
+    padding: 3px 5px;
+    border: 1px solid #d1d9e0;
+    font-size: 0.8rem;
+    text-align: right;
+    box-sizing: border-box;
+    height: 24px;
+    background-color: #f0f0f0;
 }
+
+/* ============================
+   Boutons Prestation
+   ============================ */
+.divaction_inner {
+    margin-top: 8px;
+}
+
 #btnNvlPresta {
     border: 2px solid #a389d4;
     color: #a389d4;
@@ -199,53 +291,126 @@ tbody td {
 }
 
 #btnNvlPresta:hover {
-    border: 2px solid purple;
     background-color: #a389d4;
     color: white;
 }
 #btnModifPresta:hover {
-    border: 2px solid grey;
     background-color: #8994a3;
     color: white;
 }
 #btnSuppPresta:hover {
-    border: 2px solid red;
     background-color: #f29090;
     color: white;
 }
 
-/* Actions Finales */
+/* ============================
+   Formulaire Saisie Prestation
+   ============================ */
+#divPrestationForm {
+    margin-top: 15px;
+    padding: 10px;
+    background-color: #e8f0fe;
+    border: 1px dashed #a389d4;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+#divPrestationForm .txtinput {
+    margin-bottom: 0;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+#divPrestationForm .txtinput p {
+    min-width: auto;
+    margin-bottom: 5px;
+    padding-top: 0;
+}
+
+#divPrestationForm select,
+#divPrestationForm input[type="number"] {
+    border: 1px solid #d1d9e0;
+    padding: 4px 6px;
+    height: 28px;
+    font-size: 0.8rem;
+    box-sizing: border-box;
+}
+
+#divPrestationForm select {
+    width: 250px;
+}
+
+#divPrestationForm input[type="number"] {
+    width: 80px;
+}
+
+.presta_actions_mini {
+    display: flex;
+    gap: 5px;
+    margin-top: 15px;
+}
+
+.btn-icon {
+    width: 28px;
+    height: 28px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    color: white;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-icon.check { background-color: #5cb85c; }
+.btn-icon.check:hover { background-color: #4cae4c; }
+.btn-icon.cross { background-color: #d9534f; }
+.btn-icon.cross:hover { background-color: #c9302c; }
+
+/* ============================
+   Actions Finales (Valider / Annuler)
+   ============================ */
 .final_actions {
     text-align: right;
-    margin-top: 20px;
+    margin-top: 15px;
+    padding-bottom: 20px;
 }
 
 #btnValider {
-    border: 2px solid #719ece;
-    color: #719ece;
+    border: 1px solid #a389d4; /* Violet comme dans la maquette */
+    color: #a389d4;
     background: white;
-    padding: 10px 30px;
+    padding: 8px 30px;
     cursor: pointer;
     transition: 0.3s ease;
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: 0.85rem;
+    margin-right: 10px;
 }
 
 #btnValider:hover {
-    border: 2px solid purple;
     background-color: #a389d4;
     color: white;
 }
 
 #btnAnnuler {
-    border: 2px solid #f29090;
+    border: 1px solid #f29090;
     color: #f29090;
     background: white;
-    padding: 10px 30px;
+    padding: 8px 30px;
     cursor: pointer;
     transition: 0.3s ease;
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: 0.85rem;
 }
 
 #btnAnnuler:hover {
-    border: 2px solid red;
     background-color: #f29090;
     color: white;
 }
