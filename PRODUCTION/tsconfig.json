@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "target": "es2021",
+    "module": "es6",
+    "rootDir": "./src",
+    "outDir": "./",
+    "sourceMap": true,
+    "lib": ["es2018", "dom", "dom.Iterable", "scripthost"],
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": false,
+    "strictPropertyInitialization": false,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
+
+    "noUnusedLocals": true,
+    "noUnusedParameters": false,
+    "noImplicitReturns": true,
+    "skipLibCheck": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["vue", "node_modules"]
+}

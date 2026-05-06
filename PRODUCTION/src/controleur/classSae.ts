@@ -6,17 +6,15 @@ import { SaeForm } from "./saeType.js";
 export class ControleurSae {
     private _form: SaeForm;
 
-    constructor(form: SaeForm) {
-        this._form = form;
-    }
+    init(form: SaeForm): void {
+        this._form=form
 
-    init(): void {
         this._form.divNvlInter.hidden = true;
         this.chargerInterventions();
 
         this._form.btnAjt.onclick = () => this.afficherNvlInter();
         this._form.btnEdt.onclick = () => this.prepaModifInter();
-        this._form.btnAnnuler.onclick = () => this.init();
+        this._form.btnAnnuler.onclick = () => this.init(form);
     }
 
     get form() {
@@ -291,3 +289,6 @@ export class ControleurSae {
         }
     }
 }
+
+let sae = new ControleurSae
+export { sae }

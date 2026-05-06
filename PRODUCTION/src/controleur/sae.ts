@@ -1,6 +1,6 @@
-import { ControleurSae } from "./classSae";
+import { sae } from "./classSae";
 
-const sae = new ControleurSae({
+sae.init({
     // Boutons principaux
     btnAjt: document.getElementById("btnAjt") as HTMLInputElement,
     btnEdt: document.getElementById("btnEdt") as HTMLInputElement,
@@ -45,6 +45,3 @@ const sae = new ControleurSae({
     btnValider: document.getElementById("btnValider") as HTMLInputElement,
     btnAnnuler: document.getElementById("btnAnnuler") as HTMLInputElement,
 });
-
-// Lancement
-sae.init();
