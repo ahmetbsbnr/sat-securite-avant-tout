@@ -10,12 +10,23 @@ body {
    Titre Principal
    ============================ */
 .divtitre {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
     text-align: center;
     font-size: 1.1rem;
     padding: 10px;
     color: #444;
     background-color: #cbd5e0;
     font-weight: bold;
+}
+
+.site-logo {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+    flex: 0 0 auto;
 }
 
 /* ============================

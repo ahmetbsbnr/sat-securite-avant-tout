@@ -98,10 +98,25 @@ export class ControleurSae {
         }
     }
 
-    afficherNvlInter(): void {
+    afficherNvlInter(mode: "ajout" | "modif" = "ajout"): void {
         this._form.divNvlInter.hidden = false;
+        const titre = document.querySelector(
+            "#nvlInter h2",
+        ) as HTMLHeadingElement | null;
 
-        if (this._form.numContrat.value !== "") () => this.ajouterInfoContrat();
+        if (titre) {
+            titre.textContent =
+                mode === "modif"
+                    ? "Modifier une intervention"
+                    : "Nouvelle intervention";
+        }
+
+        this._form.btnValider.value =
+            mode === "modif" ? "Modifier" : "Valider";
+
+        if (this._form.numContrat.value !== "") {
+            this.ajouterInfoContrat();
+        }
 
         this._form.btnValider.onclick = () => this.verifierSaisie();
         this._form.btnAnnuler.onclick = () => this.annulerNvlInter();
@@ -272,7 +287,7 @@ export class ControleurSae {
             );
             this.form.mailClient.value = data[0]["mel_cli"];
 
-            this.afficherNvlInter();
+            this.afficherNvlInter("modif");
         }
     }
 }

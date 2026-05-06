@@ -1,2 +1,7 @@
 .vscode
 .DS_Store
+tsconfig.tsbuildinfo
+
+# TypeScript transpilation outputs
+PRODUCTION/**/*.js
+PRODUCTION/**/*.js.map
