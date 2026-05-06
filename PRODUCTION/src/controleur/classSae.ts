@@ -116,6 +116,12 @@ export class ControleurSae {
             this.ajouterInfoContrat();
         }
 
+        this._form.numClient.addEventListener("keydown", (event) => {
+            if (event.key === "Enter") {
+                this.ajoutInfoClient();
+            }
+        });
+
         this._form.btnValider.onclick = () => this.verifierSaisie();
         this._form.btnAnnuler.onclick = () => this.annulerNvlInter();
     }
@@ -287,6 +293,23 @@ export class ControleurSae {
 
             this.afficherNvlInter("modif");
         }
+    }
+
+    /*
+    je vais finir ça ahmet tktp
+    */
+    ajoutInfoClient(){
+        const client = this.form.numClient.value
+        
+        let data = sqlWeb.SQLloadData(
+        "SELECT nom_cli, prenom_cli, tel_cli, mel_cli FROM client WHERE num_cli = ?",
+        [client],
+        );
+
+        this.form.nomClient = data[0]["nom_cli"];
+        this.form.prenomClient = data[0]["prenom_cli"];
+        this.form.telClient = data[0]["tel_cli"];
+        this.form.mailClient = data[0]["mel_cli"];
     }
 }
 
