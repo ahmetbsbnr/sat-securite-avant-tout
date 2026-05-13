@@ -7,7 +7,7 @@ export class ControleurSae {
     private _form: SaeForm;
 
     init(form: SaeForm): void {
-        this._form=form
+        this._form = form;
 
         this._form.divNvlInter.hidden = true;
         this.chargerInterventions();
@@ -98,6 +98,7 @@ export class ControleurSae {
 
     afficherNvlInter(mode: "ajout" | "modif" = "ajout"): void {
         this._form.divNvlInter.hidden = false;
+        this._form.numInter.value = this.determinerNumInter();
         const titre = document.querySelector(
             "#nvlInter h2",
         ) as HTMLHeadingElement | null;
@@ -109,16 +110,15 @@ export class ControleurSae {
                     : "Nouvelle intervention";
         }
 
-        this._form.btnValider.value =
-            mode === "modif" ? "Modifier" : "Valider";
+        this._form.btnValider.value = mode === "modif" ? "Modifier" : "Valider";
 
         if (this._form.numContrat.value !== "") {
             this.ajouterInfoContrat();
         }
 
-        this._form.numClient.addEventListener("keydown", (event) => {
+        this._form.numContrat.addEventListener("keydown", (event) => {
             if (event.key === "Enter") {
-                this.ajoutInfoClient();
+                this.ajouterInfoContrat();
             }
         });
 
@@ -129,41 +129,24 @@ export class ControleurSae {
     ajouterInfoContrat(): void {
         const numContrat = this._form.numContrat.value.trim();
 
-        this._form.dateCreaContrat.value = sqlWeb
-            .SQLloadData("SELECT date_cont FROM contrat WHERE num_cont = ?", [
-                numContrat,
-            ])
-            .toString();
-        this._form.numClient.value = sqlWeb
-            .SQLloadData(
-                "SELECT num_cli FROM client JOIN contrat WHERE num_cont = ?",
-                [numContrat],
-            )
-            .toString();
-        this._form.nomClient.value = sqlWeb
-            .SQLloadData(
-                "SELECT nom_cli FROM client JOIN contrat WHERE num_cont = ?",
-                [numContrat],
-            )
-            .toString();
-        this._form.prenomClient.value = sqlWeb
-            .SQLloadData(
-                "SELECT prenom_cli FROM client JOIN contrat WHERE num_cont = ?",
-                [numContrat],
-            )
-            .toString();
-        this._form.telClient.value = sqlWeb
-            .SQLloadData(
-                "SELECT tel_cli FROM client JOIN contrat WHERE num_cont = ?",
-                [numContrat],
-            )
-            .toString();
-        this._form.mailClient.value = sqlWeb
-            .SQLloadData(
-                "SELECT mel_cli FROM client JOIN contrat WHERE num_cont = ?",
-                [numContrat],
-            )
-            .toString();
+        const result = sqlWeb.SQLloadData(
+            `SELECT c.date_cont, cl.num_cli, cl.nom_cli, cl.prenom_cli, cl.tel_cli, cl.mel_cli 
+            FROM contrat c 
+            INNER JOIN client cl ON c.num_cli = cl.num_cli 
+            WHERE c.num_cont = ?`,
+            [numContrat],
+        );
+
+        if (result.length > 0) {
+            const ligne = result[0];
+
+            this._form.dateCreaContrat.value = ligne.date_cont.toString();
+            this._form.numClient.value = ligne.num_cli.toString();
+            this._form.nomClient.value = ligne.nom_cli.toString();
+            this._form.prenomClient.value = ligne.prenom_cli.toString();
+            this._form.telClient.value = ligne.tel_cli.toString();
+            this._form.mailClient.value = ligne.mel_cli.toString();
+        }
     }
     annulerNvlInter(): void {
         const champsRempli: (HTMLInputElement | HTMLTextAreaElement)[] = [
@@ -295,24 +278,52 @@ export class ControleurSae {
         }
     }
 
-    /*
-    je vais finir ça ahmet tktp
-    */
-   
-    ajoutInfoClient(){
-        const client = this.form.numClient.value
-        
-        let data = sqlWeb.SQLloadData(
-        "SELECT nom_cli, prenom_cli, tel_cli, mel_cli FROM client WHERE num_cli = ?",
-        [client],
-        );
+    determinerNumInter(): string {
+        let nbIntervMax: number;
 
-        this.form.nomClient = data[0]["nom_cli"];
-        this.form.prenomClient = data[0]["prenom_cli"];
-        this.form.telClient = data[0]["tel_cli"];
-        this.form.mailClient = data[0]["mel_cli"];
+        const bruteVal = this.determinerNumInterBis();
+        nbIntervMax = Number(bruteVal);
+
+        if (isNaN(nbIntervMax)) {
+            console.error("La valeur récupérée n'est pas un nombre valide");
+            return "1";
+        }
+
+        return (nbIntervMax + 1).toString();
     }
+
+    determinerNumInterBis(): string {
+        const query = "SELECT MAX(num_interv) AS maxId FROM intervention";
+        const data = sqlWeb.SQLloadData(query, null);
+
+        if (data && data.length > 0) {
+            const row = data[0];
+
+            const maxVal = row.maxId;
+
+            if (maxVal !== null && maxVal !== undefined) {
+                return maxVal.toString();
+            }
+        }
+
+        console.error("Impossible de récupérer l'ID maximum");
+        return "0";
+    }
+
+    // ajoutInfoClient() {
+    //     const client = this.form.numClient.value;
+
+    //     let data = sqlWeb.SQLloadData(
+    //         "SELECT nom_cli, prenom_cli, tel_cli, mel_cli FROM client WHERE num_cli = ?",
+    //         [client],
+    //     );
+
+    //     this.form.nomClient.value = data[0]["nom_cli"];
+    //     this.form.prenomClient.value = data[0]["prenom_cli"];
+    //     this.form.telClient.value = data[0]["tel_cli"];
+    //     this.form.mailClient.value = data[0]["mel_cli"];
+    // }
 }
 
-let sae = new ControleurSae
-export { sae }
+let sae = new ControleurSae();
+export { sae };
