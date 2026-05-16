@@ -4,7 +4,7 @@ import { TdataSet, TtabAsso } from "../modele/sqlWeb.js";
 import { SaeForm } from "./saeType.js";
 
 export class ControleurSae {
-    private _form: SaeForm;
+    private _form!: SaeForm;
 
     init(form: SaeForm): void {
         this._form = form;
@@ -294,7 +294,7 @@ export class ControleurSae {
 
     determinerNumInterBis(): string {
         const query = "SELECT MAX(num_interv) AS maxId FROM intervention";
-        const data = sqlWeb.SQLloadData(query, null);
+        const data = sqlWeb.SQLloadData(query, []);
 
         if (data && data.length > 0) {
             const row = data[0];
