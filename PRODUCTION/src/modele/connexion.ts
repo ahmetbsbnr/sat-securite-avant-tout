@@ -1,9 +1,9 @@
 import { sqlWeb } from "./sqlWeb.js";
 
-// Initialisation des chemins de l'API
+// Option 2 : API hébergée sur l'espace distant de l'étudiant
 sqlWeb.init(
     "http://localhost/sat/",
-    "http://localhost/sat/",
+    "http://localhost/sat/"
 );
 
 class Connexion {

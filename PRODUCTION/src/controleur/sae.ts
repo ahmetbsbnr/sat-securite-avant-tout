@@ -1,4 +1,4 @@
-import { sae } from "./classSae";
+import { sae } from "./classSae.js";
 
 sae.init({
     // Boutons principaux
