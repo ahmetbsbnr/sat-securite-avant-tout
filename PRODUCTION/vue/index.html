@@ -41,6 +41,7 @@
                 class="btn"
             />
             <input id="btnEdt" type="button" value="Modifier" class="btn" />
+            <input id="btnVisu" type="button" value="Afficher" class="btn" />
             <input id="btnSupp" type="button" value="Supprimer" class="btn" />
         </div>
 
@@ -185,6 +186,7 @@
 
                         <!-- Sous-formulaire pour ajouter/modifier une prestation -->
                         <div id="divPrestationForm">
+                            <p id="erreurPrestation" class="msg-erreur"></p>
                             <div class="txtinput">
                                 <p>Choisir une prestation</p>
                                 <select id="selectPrestation">
@@ -238,6 +240,7 @@
 
             <!-- ===== Actions finales ===== -->
             <div class="final_actions">
+                <p id="erreurFormulaire" class="msg-erreur"></p>
                 <input
                     id="btnValider"
                     class="btn"
@@ -250,6 +253,46 @@
                     type="button"
                     value="Annuler"
                 />
+            </div>
+        </div>
+
+        <!-- Modal de visualisation (lecture seule) -->
+        <div id="modalDetail" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Détails de l'intervention</h3>
+                    <button id="btnCloseVisu" class="btn-icon cross">✖</button>
+                </div>
+                <div class="modal-body">
+                    <div class="txtinput">
+                        <p>Numero d'intervention</p>
+                        <input type="text" id="v_numInter" readonly />
+                    </div>
+                    <div class="txtinput">
+                        <p>Date de l'intervention</p>
+                        <input type="date" id="v_dateInter" readonly />
+                    </div>
+                    <div class="txtinput">
+                        <p>Objet</p>
+                        <input type="text" id="v_objetInter" readonly />
+                    </div>
+                    <div class="txtinput txtinput_obs">
+                        <p>Observations</p>
+                        <textarea id="v_observations" rows="4" readonly></textarea>
+                    </div>
+                    <div class="txtinput">
+                        <p>Numero contrat</p>
+                        <input type="text" id="v_numContrat" readonly />
+                    </div>
+                    <div class="txtinput">
+                        <p>Client</p>
+                        <input type="text" id="v_client" readonly />
+                    </div>
+                    <div class="txtinput">
+                        <p>Total TTC (€)</p>
+                        <input type="text" id="v_totalTTC" readonly />
+                    </div>
+                </div>
             </div>
         </div>
 

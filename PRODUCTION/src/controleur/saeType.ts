@@ -2,6 +2,7 @@ export type SaeForm = {
     // Boutons de navigation
     btnAjt: HTMLInputElement;
     btnEdt: HTMLInputElement;
+    btnVisu: HTMLInputElement;
     btnSupp: HTMLInputElement;
 
     // Différent conteneurs
@@ -18,7 +19,7 @@ export type SaeForm = {
     numContrat: HTMLInputElement;
     dateCreaContrat: HTMLTextAreaElement;
     infoSite: HTMLTextAreaElement;
-    numClient: HTMLInputElement;
+    numClient: HTMLTextAreaElement;
     nomClient: HTMLTextAreaElement;
     prenomClient: HTMLTextAreaElement;
     telClient: HTMLTextAreaElement;

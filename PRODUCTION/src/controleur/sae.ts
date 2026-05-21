@@ -4,6 +4,7 @@ sae.init({
     // Boutons principaux
     btnAjt: document.getElementById("btnAjt") as HTMLInputElement,
     btnEdt: document.getElementById("btnEdt") as HTMLInputElement,
+    btnVisu: document.getElementById("btnVisu") as HTMLInputElement,
     btnSupp: document.getElementById("btnSupp") as HTMLInputElement,
 
     // Le conteneur (Id HTML est nvlInter, nom dans le type est divNvlInter)
@@ -26,7 +27,7 @@ sae.init({
         "dateCreaContrat",
     ) as HTMLTextAreaElement,
     infoSite: document.getElementById("infoSite") as HTMLTextAreaElement,
-    numClient: document.getElementById("numClient") as HTMLInputElement,
+    numClient: document.getElementById("numClient") as HTMLTextAreaElement,
     nomClient: document.getElementById("nomClient") as HTMLTextAreaElement,
     prenomClient: document.getElementById(
         "prenomClient",
