@@ -14,19 +14,17 @@ class MyConnexion
 			$dsn = $driver.":host=" .$host .";port=" .$port .";dbname=" .$bdname .";charset=" .$charset;	
 			$this->connexion = new PDO ($dsn, $user, $pwd);
 		}
-        // Une exception est levee uniquement si une erreur est trouvee
     catch (PDOException $e)
         {
-            echo ("Probl&egrave;me connexion &agrave; la base de donn&eacute;es !");
-            exit ();
+			throw new RuntimeException("Problème connexion à la base de données !");
         } 
 	}
 
-	public static function getInstance($host, $port, $bdname, $user, $pwd, $driver='mysql')
+	public static function getInstance($host, $port, $bdname, $user, $pwd, $charset='utf8', $driver='mysql')
 	{
 	if (self::$instance == null)
 		{
-			self::$instance = new MyConnexion($host, $port, $bdname, $user, $pwd, $driver);
+			self::$instance = new MyConnexion($host, $port, $bdname, $user, $pwd, $charset, $driver);
 		}
 
 		return self::$instance;

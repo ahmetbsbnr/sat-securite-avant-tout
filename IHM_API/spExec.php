@@ -2,6 +2,7 @@
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
+header("Content-Type: application/json; charset=UTF-8");
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') { exit(0); }
 // à installer sur votre serveur local
 // dans dossier web
@@ -26,37 +27,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') { exit(0); }
 
 	    return json_encode($data);
 	}
+try {
+	if (!isset($_POST['bd'])) {
+		throw new RuntimeException("Paramètre bd manquant.");
+	}
 
-$obj = json_decode($_POST['bd']);
-if (!empty((array) $obj)) {
 	$bdparams = json_decode($_POST['bd']);
-}
+	if (!$bdparams) {
+		throw new RuntimeException("Paramètre bd invalide.");
+	}
 
-	
-if (isset($_POST['req'])) {
-	$interrogation = ($_POST['req'] != 'manipulation'); 
-}
-$bdd = bdOpen($bdparams->host,$bdparams->port,$bdparams->bdname,$bdparams->user,$bdparams->pwd,$bdparams->charset,$bdparams->driver);
-if ($_POST['sp'] != '') {
+	$interrogation = !isset($_POST['req']) || ($_POST['req'] != 'manipulation');
+	$bdd = bdOpen($bdparams->host, $bdparams->port, $bdparams->bdname, $bdparams->user, $bdparams->pwd, $bdparams->charset, $bdparams->driver);
+
+	if (!isset($_POST['sp']) || $_POST['sp'] === '') {
+		echo json_encode([]);
+		exit(0);
+	}
+
 	$lesparams = json_decode(urldecode($_POST['params']));	
-
-		$sp = $bdd->prepare($_POST['sp']);
-		if ($lesparams!="") {
-		   for($i=0;$i<count($lesparams);$i++) {
+	$sp = $bdd->prepare($_POST['sp']);
+	if ($lesparams != "") {
+	   for($i=0;$i<count($lesparams);$i++) {
 			$unparam = trim($lesparams[$i]);
 			if ( ($unparam == '') && ($interrogation) ) {
 				$unparam = 'zzz';
 			}
 			$sp->bindValue($i+1, $unparam, PDO::PARAM_STR);
-		} 
+		}
 	}
-	
-	$sp->execute();
 
+	$sp->execute();
 	echo(resultat($sp));
-}
-else { 
-	echo("{}");
+} catch (Throwable $e) {
+	http_response_code(500);
+	echo json_encode([
+		'erreur' => $e->getMessage(),
+	]);
 }
 
 
