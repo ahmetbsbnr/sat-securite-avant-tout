@@ -208,12 +208,14 @@ tbody tr.selected:focus td {
     margin-bottom: 6px;
 }
 
-.txtinput p {
+.txtinput p,
+.txtinput label {
     width: 160px;
     min-width: 160px;
     margin: 0;
     font-size: 0.8rem;
     padding-top: 5px;
+    cursor: pointer;
 }
 
 .txtinput input,
@@ -234,8 +236,36 @@ tbody tr.selected:focus td {
     resize: none;
 }
 
-.txtinput textarea[readonly] {
-    background-color: #f9f9f9; /* Plus clair pour les textareas readonly */
+.display-field-area,
+.display-field-area:focus {
+    border: 1px solid #d1d9e0;
+    background-color: #f8f9fa;
+    outline: none;
+    box-shadow: none;
+    cursor: default;
+    resize: none;
+    pointer-events: none;
+    color: #444;
+    font-size: 0.8rem;
+    font-family: inherit;
+    padding: 4px 6px;
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 80px;
+}
+
+.display-field,
+.display-field:focus,
+.display-field:hover {
+    background: transparent;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    cursor: default;
+    resize: none;
+    pointer-events: none;
+    color: #444;
+    padding-left: 0;
 }
 
 /* Observations : label au dessus, prend toute la largeur */
@@ -245,7 +275,8 @@ tbody tr.selected:focus td {
     height: 100%;
 }
 
-.txtinput_obs p {
+.txtinput_obs p,
+.txtinput_obs label {
     padding-top: 0;
     margin-bottom: 5px;
 }
@@ -294,11 +325,13 @@ tbody tr.selected:focus td {
     gap: 5px 8px;
 }
 
-.grid_total p {
+.grid_total p,
+.grid_total label {
     margin: 0;
     font-weight: bold;
     font-size: 0.8rem;
     text-align: right;
+    cursor: pointer;
 }
 
 .grid_total input {
@@ -310,6 +343,11 @@ tbody tr.selected:focus td {
     box-sizing: border-box;
     height: 24px;
     background-color: #f0f0f0;
+}
+
+.grid_total input.display-field {
+    text-align: right;
+    font-weight: bold;
 }
 
 /* ============================
@@ -368,7 +406,8 @@ tbody tr.selected:focus td {
     align-items: flex-start;
 }
 
-#divPrestationForm .txtinput p {
+#divPrestationForm .txtinput p,
+#divPrestationForm .txtinput label {
     min-width: auto;
     margin-bottom: 5px;
     padding-top: 0;
@@ -477,6 +516,19 @@ tbody tr.selected:focus td {
     min-height: 1.2em;
 }
 
+#erreurListe {
+    text-align: center;
+}
+
+.msg-succes {
+    color: #2e7d32;
+    font-weight: bold;
+    font-size: 0.85rem;
+    margin: 4px 0;
+    min-height: 1.2em;
+    text-align: center;
+}
+
 /* Modal visualisation */
 .modal.hidden { display: none; }
 .modal {
@@ -503,4 +555,12 @@ tbody tr.selected:focus td {
 .modal-body { margin-top: 10px; }
 .modal .txtinput p { width: 180px; }
 .modal .txtinput input, .modal .txtinput textarea { width: calc(100% - 190px); }
+.modal .txtinput input.display-field,
+.modal .txtinput textarea.display-field {
+    border: none;
+    background: transparent;
+    outline: none;
+    box-shadow: none;
+    width: calc(100% - 190px);
+}
 

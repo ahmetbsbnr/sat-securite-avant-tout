@@ -9,12 +9,24 @@ export class ControleurSae {
     private _modeFormulaire: "ajout" | "modif" = "ajout";
     private _lignePrestaEnModif: HTMLTableRowElement | null = null;
 
+    private setListeVisible(visible: boolean): void {
+        const table = document.getElementById("table_intervention") as HTMLElement | null;
+        const divAction = document.querySelector(".divaction") as HTMLElement | null;
+        const erreurListe = document.getElementById("erreurListe") as HTMLElement | null;
+        if (table) table.hidden = !visible;
+        if (divAction) divAction.hidden = !visible;
+        if (erreurListe) erreurListe.hidden = !visible;
+    }
+
     init(form: SaeForm): void {
         this._form = form;
         this._modeFormulaire = "ajout";
         this._lignePrestaEnModif = null;
 
         this._form.divNvlInter.hidden = true;
+        this.setListeVisible(true);
+        this.cacherErreur("erreurListe");
+        this.cacherSucces();
         this.chargerInterventions();
         this.ajouterOptionPrestation();
 
@@ -36,6 +48,16 @@ export class ControleurSae {
 
     private cacherErreur(idElement: string): void {
         const el = document.getElementById(idElement);
+        if (el) el.textContent = "";
+    }
+
+    private afficherSucces(message: string): void {
+        const el = document.getElementById("msgSucces");
+        if (el) el.textContent = message;
+    }
+
+    private cacherSucces(): void {
+        const el = document.getElementById("msgSucces");
         if (el) el.textContent = "";
     }
 
@@ -71,7 +93,13 @@ export class ControleurSae {
                 tr.appendChild(tdNum);
 
                 let tdDate: HTMLTableCellElement = document.createElement("td");
-                tdDate.textContent = row["date_interv"] || "";
+                const rawDate: string = row["date_interv"] || "";
+                if (rawDate && rawDate.includes("-")) {
+                    const [y, m, d] = rawDate.split("-");
+                    tdDate.textContent = `${d}/${m}/${y}`;
+                } else {
+                    tdDate.textContent = rawDate;
+                }
                 tr.appendChild(tdDate);
 
                 let tdCont: HTMLTableCellElement = document.createElement("td");
@@ -139,7 +167,7 @@ export class ControleurSae {
             if (filtrerUtilisees && codesUtilises.has(d.code_prest)) continue;
             const opt = document.createElement("option");
             opt.value = d.code_prest;
-            opt.textContent = d.lib_prest;
+            opt.textContent = `${d.lib_prest} — ${parseFloat(d.tarif_ht).toFixed(2)} €`;
             this._form.selectPrestation.appendChild(opt);
         }
     }
@@ -153,11 +181,14 @@ export class ControleurSae {
 
         this._form.divNvlInter.hidden = false;
         this._form.divPrestationForm.hidden = true;
+        this.cacherErreur("erreurPrestaAction");
+        this.setListeVisible(false);
 
         if (mode === "ajout") {
             this._form.numInter.value = this.determinerNumInter();
             this._form.dateInter.value = this.determinerDate();
         }
+        this._form.dateInter.min = this.determinerDate();
 
         this.ajouterOptionPrestation();
 
@@ -170,6 +201,7 @@ export class ControleurSae {
                 mode === "modif"
                     ? "Modifier une intervention"
                     : "Nouvelle intervention";
+
         }
 
         this._form.btnValider.value = mode === "modif" ? "Modifier" : "Valider";
@@ -178,14 +210,20 @@ export class ControleurSae {
             this.ajouterInfoContrat();
         }
 
-        this._form.numContrat.addEventListener("keydown", (event) => {
+        this._form.numContrat.onkeydown = (event) => {
             if (event.key === "Enter") {
                 this.ajouterInfoContrat();
             }
-        });
+        };
+        this._form.numContrat.onblur = () => {
+            if (this._form.numContrat.value.trim() !== "") {
+                this.ajouterInfoContrat();
+            }
+        };
 
         this._form.btnNvlPresta.onclick = () => {
             this._lignePrestaEnModif = null;
+            this.cacherErreur("erreurPrestaAction");
             this._form.divPrestationForm.hidden = false;
             this._form.selectPrestation.value = "";
             this._form.qtePrestation.value = "1";
@@ -198,7 +236,10 @@ export class ControleurSae {
         };
         this._form.btnModifPresta.onclick = () => this.modifierPresta();
         this._form.btnValider.onclick = () => this.verifierSaisie();
-        this._form.btnAnnuler.onclick = () => this.viderZonesTextes();
+        this._form.btnAnnuler.onclick = () => {
+            if (this._modeFormulaire === "modif" && !confirm("Annuler les modifications ?")) return;
+            this.viderZonesTextes();
+        };
         this._form.btnValiderPresta.onclick = () => this.ajouterPresta();
         this._form.btnSuppPresta.onclick = () => this.supprPresta();
     }
@@ -209,10 +250,12 @@ export class ControleurSae {
         ) as HTMLTableRowElement;
 
         if (sIndex) {
+            if (!confirm(`Confirmer la suppression de la prestation "${sIndex.cells[1].textContent}" ?`)) return;
+            this.cacherErreur("erreurPrestaAction");
             sIndex.remove();
             this.calculateurPrix();
         } else {
-            alert("Veuillez sélectionner une prestation à supprimer.");
+            this.afficherErreur("erreurPrestaAction", "Veuillez sélectionner une prestation à supprimer.");
         }
     }
 
@@ -224,9 +267,9 @@ export class ControleurSae {
             montantTotal += Number(ligne.children[4].textContent);
         });
 
-        this._form.totalHT.value = montantTotal.toString();
-        this._form.totalTVA.value = (montantTotal * 0.1).toFixed(2).toString();
-        this._form.totalTTC.value = (montantTotal * 1.1).toFixed(2).toString();
+        this._form.totalHT.value = montantTotal.toFixed(2);
+        this._form.totalTVA.value = (montantTotal * 0.1).toFixed(2);
+        this._form.totalTTC.value = (montantTotal * 1.1).toFixed(2);
     }
 
     ajouterPresta(): void {
@@ -295,6 +338,7 @@ export class ControleurSae {
         }
 
         this._form.divPrestationForm.hidden = true;
+        this.cacherErreur("erreurPrestaAction");
         this.calculateurPrix();
     }
 
@@ -458,6 +502,7 @@ export class ControleurSae {
         }
 
         this.init(this._form);
+        this.afficherSucces("Intervention ajoutée avec succès.");
     }
 
     modifierInter(): void {
@@ -501,6 +546,7 @@ export class ControleurSae {
         }
 
         this.init(this._form);
+        this.afficherSucces("Intervention modifiée avec succès.");
     }
 
     modifierPresta(): void {
@@ -513,8 +559,9 @@ export class ControleurSae {
         ) as HTMLTableRowElement;
 
         if (!sIndex) {
-            alert("Vous n'avez séléctionner aucune ligne");
+            this.afficherErreur("erreurPrestaAction", "Veuillez sélectionner une prestation à modifier.");
         } else {
+            this.cacherErreur("erreurPrestaAction");
             this._lignePrestaEnModif = sIndex;
             this.ajouterOptionPrestation(false);
             this._form.selectPrestation.value =
@@ -535,13 +582,13 @@ export class ControleurSae {
         ) as HTMLTableRowElement;
 
         if (!ligneSelectionne) {
-            alert("Vous n'avez séléctionner aucune ligne");
+            this.afficherErreur("erreurListe", "Veuillez sélectionner une intervention à modifier.");
             return;
         }
+        this.cacherErreur("erreurListe");
 
         const numInter = ligneSelectionne.cells[0].textContent || "";
         const numContrat = ligneSelectionne.cells[2].textContent || "";
-        const numClient = ligneSelectionne.cells[4].textContent || "";
 
         let data;
 
@@ -557,8 +604,8 @@ export class ControleurSae {
         aujourdhui.setHours(0, 0, 0, 0);
         dateObj.setHours(0, 0, 0, 0);
         if (aujourdhui >= dateObj) {
-            alert(
-                "Modification impossible : la date d'intervention est aujourd'hui ou déjà passée.\n" +
+            this.afficherErreur("erreurListe",
+                "Modification impossible : la date d'intervention est aujourd'hui ou déjà passée. " +
                 "La modification n'est autorisée que jusqu'à la veille de l'intervention.",
             );
             return;
@@ -566,38 +613,16 @@ export class ControleurSae {
 
         this.form.numInter.value = numInter;
         this.form.numContrat.value = numContrat;
-        this.form.numClient.value = numClient;
         this.form.dateInter.value = dateInterv;
 
         data = sqlWeb.SQLloadData(
-            "SELECT objet_interv FROM intervention WHERE num_interv = ?",
+            "SELECT objet_interv, obs_interv FROM intervention WHERE num_interv = ?",
             [numInter],
         );
         this.form.objetInter.value = data[0]["objet_interv"];
-
-        data = sqlWeb.SQLloadData(
-            "SELECT obs_interv FROM intervention WHERE num_interv = ?",
-            [numInter],
-        );
         this.form.observations.value = data[0]["obs_interv"] || "";
 
-        data = sqlWeb.SQLloadData(
-            "SELECT nom_cli FROM client WHERE num_cli = ?",
-            [numClient],
-        );
-        this.form.nomClient.value = data[0]["nom_cli"];
-
-        data = sqlWeb.SQLloadData(
-            "SELECT prenom_cli FROM client WHERE num_cli = ?",
-            [numClient],
-        );
-        this.form.prenomClient.value = data[0]["prenom_cli"];
-
-        data = sqlWeb.SQLloadData(
-            "SELECT mel_cli FROM client WHERE num_cli = ?",
-            [numClient],
-        );
-        this.form.mailClient.value = data[0]["mel_cli"] || "";
+        this.ajouterInfoContrat();
 
         let tbody = this._form.tablePrestations.querySelector("tbody");
         if (tbody) {
@@ -664,9 +689,10 @@ export class ControleurSae {
         ) as HTMLTableRowElement;
 
         if (!ligneSelectionne) {
-            alert("Vous n'avez sélectionné aucune intervention.");
+            this.afficherErreur("erreurListe", "Veuillez sélectionner une intervention à afficher.");
             return;
         }
+        this.cacherErreur("erreurListe");
 
         const numInter = ligneSelectionne.cells[0].textContent || "";
 
@@ -678,7 +704,7 @@ export class ControleurSae {
         );
 
         if (!data || data.length === 0) {
-            alert("Détails introuvables pour cette intervention.");
+            this.afficherErreur("erreurListe", "Détails introuvables pour cette intervention.");
             return;
         }
 
@@ -690,7 +716,13 @@ export class ControleurSae {
         };
 
         setVal("v_numInter", numInter);
-        setVal("v_dateInter", info.date_interv || "");
+        const rawInterv: string = info.date_interv || "";
+        if (rawInterv.includes("-")) {
+            const [y, m, d] = rawInterv.split("-");
+            setVal("v_dateInter", `${d}/${m}/${y}`);
+        } else {
+            setVal("v_dateInter", rawInterv);
+        }
         setVal("v_objetInter", info.objet_interv || "");
         setVal("v_observations", info.obs_interv || "");
         setVal("v_numContrat", info.num_cont || "");
@@ -713,9 +745,9 @@ export class ControleurSae {
         if (modal) modal.classList.remove("hidden");
 
         const btnClose = document.getElementById("btnCloseVisu");
-        if (btnClose) btnClose.addEventListener("click", () => {
+        if (btnClose) btnClose.onclick = () => {
             if (modal) modal.classList.add("hidden");
-        });
+        };
     }
 
     determinerNumInter(): string {
@@ -765,9 +797,10 @@ export class ControleurSae {
         ) as HTMLTableRowElement;
 
         if (!sIndex) {
-            alert("Vous n'avez sélectionné aucune intervention.");
-            this.init(this.form);
+            this.afficherErreur("erreurListe", "Veuillez sélectionner une intervention à supprimer.");
         } else {
+            if (!confirm(`Confirmer la suppression de l'intervention n°${sIndex.cells[0].textContent} ?`)) return;
+            this.cacherErreur("erreurListe");
             const numInter = sIndex.cells[0].textContent;
 
             const requeteUtilisation =
@@ -784,13 +817,12 @@ export class ControleurSae {
                 if (succes2) {
                     sIndex.remove();
                     this.init(this._form);
+                    this.afficherSucces("Intervention supprimée avec succès.");
                 } else {
-                    alert(
-                        "Erreur lors de la suppression de l'intervention en base de données.",
-                    );
+                    this.afficherErreur("erreurListe", "Erreur lors de la suppression de l'intervention en base de données.");
                 }
             } else {
-                alert("Erreur lors de la suppression des prestations liées.");
+                this.afficherErreur("erreurListe", "Erreur lors de la suppression des prestations liées.");
             }
         }
     }

@@ -44,9 +44,12 @@
             <input id="btnVisu" type="button" value="Afficher" class="btn" />
             <input id="btnSupp" type="button" value="Supprimer" class="btn" />
         </div>
+        <p id="erreurListe" class="msg-erreur"></p>
+        <p id="msgSucces" class="msg-succes"></p>
 
         <div id="nvlInter">
-            <h2>Nouvel Intervention</h2>
+            <h2>Nouvelle intervention</h2>
+            <p id="erreurFormulaire" class="msg-erreur"></p>
 
             <!-- ===== Section INTERVENTION ===== -->
             <div id="intervention" class="infoInter">
@@ -54,21 +57,21 @@
                 <div class="moit">
                     <div>
                         <div class="txtinput">
-                            <p>Numero d'intervention</p>
-                            <input type="text" id="numInter" />
+                            <label for="numInter">Numero d'intervention</label>
+                            <input type="text" id="numInter" readonly class="display-field" />
                         </div>
                         <div class="txtinput">
-                            <p>Date de l'intervention</p>
+                            <label for="dateInter">Date de l'intervention</label>
                             <input type="date" id="dateInter" />
                         </div>
                         <div class="txtinput">
-                            <p>Objet de l'intervention</p>
+                            <label for="objetInter">Objet de l'intervention</label>
                             <input type="text" id="objetInter" />
                         </div>
                     </div>
                     <div>
                         <div class="txtinput txtinput_obs">
-                            <p>Observations (facultatif)</p>
+                            <label for="observations">Observations (facultatif)</label>
                             <textarea id="observations" rows="6"></textarea>
                         </div>
                     </div>
@@ -81,65 +84,72 @@
                 <div class="moit">
                     <div>
                         <div class="txtinput">
-                            <p>Numero du contrat</p>
+                            <label for="numContrat">Numero du contrat</label>
                             <input type="text" id="numContrat" />
                         </div>
                         <div class="txtinput">
-                            <p>Date création du contrat</p>
+                            <label for="dateCreaContrat">Date création du contrat</label>
                             <textarea
                                 id="dateCreaContrat"
                                 readonly
                                 rows="1"
+                                class="display-field"
                             ></textarea>
                         </div>
                         <div class="txtinput">
-                            <p>Informations du site</p>
+                            <label for="infoSite">Informations du site</label>
                             <textarea
                                 id="infoSite"
                                 rows="4"
                                 readonly
+                                class="display-field"
                             ></textarea>
                         </div>
                     </div>
                     <div>
                         <div class="txtinput">
-                            <p>Numero client</p>
+                            <label for="numClient">Numero client</label>
                             <textarea
                                 id="numClient"
                                 readonly
                                 rows="1"
+                                class="display-field"
                             ></textarea>
                         </div>
                         <div class="txtinput">
-                            <p>Nom du client</p>
+                            <label for="nomClient">Nom du client</label>
                             <textarea
                                 id="nomClient"
                                 readonly
                                 rows="1"
+                                class="display-field"
                             ></textarea>
                         </div>
                         <div class="txtinput">
-                            <p>Prenom du client</p>
+                            <label for="prenomClient">Prenom du client</label>
                             <textarea
                                 id="prenomClient"
                                 readonly
                                 rows="1"
+                                class="display-field"
                             ></textarea>
                         </div>
                         <div class="txtinput">
-                            <p>Téléphone</p>
+                            <label for="telClient">Téléphone</label>
                             <textarea
                                 id="telClient"
                                 readonly
                                 rows="1"
+                                class="display-field"
                             ></textarea>
                         </div>
                         <div class="txtinput">
-                            <p>Adresse e-mail</p>
+                            <label for="mailClient">Adresse e-mail</label>
                             <textarea
                                 id="mailClient"
                                 readonly
                                 rows="1"
+                                class="display-field"
                             ></textarea>
                         </div>
                     </div>
@@ -184,11 +194,13 @@
                             />
                         </div>
 
+                        <p id="erreurPrestaAction" class="msg-erreur"></p>
+
                         <!-- Sous-formulaire pour ajouter/modifier une prestation -->
                         <div id="divPrestationForm">
                             <p id="erreurPrestation" class="msg-erreur"></p>
                             <div class="txtinput">
-                                <p>Choisir une prestation</p>
+                                <label for="selectPrestation">Choisir une prestation</label>
                                 <select id="selectPrestation">
                                     <option value=""
                                         >-- Choisissez une option --</option
@@ -196,7 +208,7 @@
                                 </select>
                             </div>
                             <div class="txtinput">
-                                <p>Saisir une quantité</p>
+                                <label for="qtePrestation">Saisir une quantité</label>
                                 <input
                                     type="number"
                                     id="qtePrestation"
@@ -227,12 +239,12 @@
                             >Total de(s) intervention(s)</div
                         >
                         <div class="grid_total">
-                            <p>Total HT (€)</p>
-                            <input type="text" id="totalHT" readonly />
-                            <p>TVA 10% (€)</p>
-                            <input type="text" id="totalTVA" readonly />
-                            <p>Total TTC (€)</p>
-                            <input type="text" id="totalTTC" readonly />
+                            <label for="totalHT">Total HT (€)</label>
+                            <input type="text" id="totalHT" readonly class="display-field" />
+                            <label for="totalTVA">TVA 10% (€)</label>
+                            <input type="text" id="totalTVA" readonly class="display-field" />
+                            <label for="totalTTC">Total TTC (€)</label>
+                            <input type="text" id="totalTTC" readonly class="display-field" />
                         </div>
                     </div>
                 </div>
@@ -240,7 +252,6 @@
 
             <!-- ===== Actions finales ===== -->
             <div class="final_actions">
-                <p id="erreurFormulaire" class="msg-erreur"></p>
                 <input
                     id="btnValider"
                     class="btn"
@@ -266,31 +277,31 @@
                 <div class="modal-body">
                     <div class="txtinput">
                         <p>Numero d'intervention</p>
-                        <input type="text" id="v_numInter" readonly />
+                        <input type="text" id="v_numInter" readonly class="display-field" />
                     </div>
                     <div class="txtinput">
                         <p>Date de l'intervention</p>
-                        <input type="date" id="v_dateInter" readonly />
+                        <input type="text" id="v_dateInter" readonly class="display-field" />
                     </div>
                     <div class="txtinput">
                         <p>Objet</p>
-                        <input type="text" id="v_objetInter" readonly />
+                        <input type="text" id="v_objetInter" readonly class="display-field" />
                     </div>
                     <div class="txtinput txtinput_obs">
                         <p>Observations</p>
-                        <textarea id="v_observations" rows="4" readonly></textarea>
+                        <textarea id="v_observations" rows="4" readonly class="display-field-area"></textarea>
                     </div>
                     <div class="txtinput">
                         <p>Numero contrat</p>
-                        <input type="text" id="v_numContrat" readonly />
+                        <input type="text" id="v_numContrat" readonly class="display-field" />
                     </div>
                     <div class="txtinput">
                         <p>Client</p>
-                        <input type="text" id="v_client" readonly />
+                        <input type="text" id="v_client" readonly class="display-field" />
                     </div>
                     <div class="txtinput">
                         <p>Total TTC (€)</p>
-                        <input type="text" id="v_totalTTC" readonly />
+                        <input type="text" id="v_totalTTC" readonly class="display-field" />
                     </div>
                 </div>
             </div>
