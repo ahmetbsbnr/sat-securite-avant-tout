@@ -11,9 +11,11 @@ export class ControleurSae {
 
         this._form.divNvlInter.hidden = true;
         this.chargerInterventions();
+        this.ajouterOptionPrestation();
 
         this._form.btnAjt.onclick = () => this.afficherNvlInter();
         this._form.btnEdt.onclick = () => this.prepaModifInter();
+        this._form.btnSupp.onclick = () => this.supprimerInter();
         this._form.btnAnnuler.onclick = () => this.init(form);
     }
 
@@ -39,10 +41,10 @@ export class ControleurSae {
             "#table_intervention tbody",
         ) as HTMLTableSectionElement | null;
 
+        let k = 0;
         if (tbody) {
             tbody.innerHTML = "";
 
-            // Si aucune donnée n'est reçue, on arrête ici
             if (!dataSet || dataSet.length === 0) return;
 
             dataSet.forEach((row: TtabAsso) => {
@@ -78,10 +80,9 @@ export class ControleurSae {
                 let tdMontant: HTMLTableCellElement =
                     document.createElement("td");
                 // Vérification au cas où le montant serait null
-                let montant = row["montant_ht"]
-                    ? parseFloat(row["montant_ht"]).toFixed(2)
-                    : "0.00";
-                tdMontant.textContent = montant + " €";
+                let montantht = dataSet[k].montant_ht;
+                let montant = Number(montantht) * 1.1;
+                tdMontant.textContent = montant.toFixed(2).toString() + " €";
                 tr.appendChild(tdMontant);
 
                 tr.addEventListener("click", () => {
@@ -92,13 +93,44 @@ export class ControleurSae {
                 });
 
                 tbody.appendChild(tr);
+                k++;
             });
         }
     }
 
+    ajouterOptionPrestation() {
+        while (this._form.selectPrestation.options.length > 1) {
+            this._form.selectPrestation.remove(1);
+        }
+
+        this._form.qtePrestation.value = "0";
+
+        const data = sqlWeb.SQLloadData(
+            `SELECT prestation.code_prest, prestation.lib_prest, prestation.tarif_ht 
+            FROM prestation`,
+            [],
+        );
+
+        for (let d of data) {
+            const lib = d.lib_prest;
+            const valLib = d.code_prest;
+
+            const opt = document.createElement("option");
+            opt.value = valLib;
+            opt.textContent = lib;
+
+            this._form.selectPrestation.appendChild(opt);
+        }
+    }
+
     afficherNvlInter(mode: "ajout" | "modif" = "ajout"): void {
+        if (mode === "ajout") this.viderZonesTextes();
         this._form.divNvlInter.hidden = false;
+        this._form.divPrestationForm.hidden = true;
         this._form.numInter.value = this.determinerNumInter();
+        this._form.dateInter.value = this.determinerDate();
+        this.ajouterOptionPrestation();
+
         const titre = document.querySelector(
             "#nvlInter h2",
         ) as HTMLHeadingElement | null;
@@ -122,8 +154,102 @@ export class ControleurSae {
             }
         });
 
+        this._form.btnNvlPresta.onclick = () => {
+            this._form.divPrestationForm.hidden = false;
+            this._form.qtePrestation.value = "0";
+            this.ajouterOptionPrestation();
+            // console.log("Affiché");
+        };
+        this._form.btnAnnulerPresta.onclick = () => {
+            this._form.divPrestationForm.hidden = true;
+            this._form.qtePrestation.value = "0";
+            this.ajouterOptionPrestation();
+        };
+        this._form.btnModifPresta.onclick = () => this.modifierPresta();
         this._form.btnValider.onclick = () => this.verifierSaisie();
-        this._form.btnAnnuler.onclick = () => this.annulerNvlInter();
+        this._form.btnAnnuler.onclick = () => this.viderZonesTextes();
+        this._form.btnValiderPresta.onclick = () => this.ajouterPresta();
+        this._form.btnSuppPresta.onclick = () => this.supprPresta();
+    }
+
+    supprPresta() {
+        const sIndex = this._form.tablePrestations.querySelector(
+            "tr.selected",
+        ) as HTMLTableRowElement;
+
+        if (sIndex) {
+            sIndex.remove();
+            this.calculateurPrix();
+        } else {
+            alert("Veuillez sélectionner une prestation à supprimer.");
+        }
+    }
+
+    calculateurPrix() {
+        const lignes = this._form.tablePrestations.querySelectorAll("tbody tr");
+
+        let montantTotal = 0;
+        lignes.forEach((ligne) => {
+            montantTotal += Number(ligne.children[4].textContent);
+        });
+
+        this._form.totalHT.value = montantTotal.toString();
+        this._form.totalTVA.value = (montantTotal * 0.1).toFixed(2).toString();
+        this._form.totalTTC.value = (montantTotal * 1.1).toFixed(2).toString();
+    }
+
+    ajouterPresta() {
+        const data = sqlWeb.SQLloadData(
+            `SELECT prestation.code_prest, prestation.lib_prest, prestation.tarif_ht 
+            FROM prestation
+            WHERE prestation.code_prest = ?`,
+            [this._form.selectPrestation.value],
+        );
+
+        const nbPresta: number = Number(this._form.qtePrestation.value);
+
+        let tbody = this._form.tablePrestations.querySelector("tbody");
+
+        if (tbody) {
+            if (!data || data.length === 0) return;
+
+            let tr: HTMLTableRowElement = document.createElement("tr");
+
+            const code_presta = this._form.selectPrestation.value;
+            let tdPrest: HTMLTableCellElement = document.createElement("td");
+            tdPrest.textContent = code_presta;
+            tr.appendChild(tdPrest);
+
+            const lib = data[0].lib_prest;
+            let tdLib: HTMLTableCellElement = document.createElement("td");
+            tdLib.textContent = lib;
+            tr.appendChild(tdLib);
+
+            const prixU = data[0].tarif_ht;
+            let tdPrixU: HTMLTableCellElement = document.createElement("td");
+            tdPrixU.textContent = prixU.toString();
+            tr.appendChild(tdPrixU);
+
+            let tdQte: HTMLTableCellElement = document.createElement("td");
+            tdQte.textContent = nbPresta.toString();
+            tr.appendChild(tdQte);
+
+            let tdPrixT: HTMLTableCellElement = document.createElement("td");
+            let prixTotal = (Number(prixU) * nbPresta).toString();
+            tdPrixT.textContent = prixTotal;
+            tr.appendChild(tdPrixT);
+
+            tr.addEventListener("click", () => {
+                this._form.tablePrestations
+                    .querySelectorAll("tbody tr")
+                    .forEach((r) => r.classList.remove("selected"));
+                tr.classList.add("selected");
+            });
+
+            tbody.appendChild(tr);
+        }
+        this._form.divPrestationForm.hidden = true;
+        this.calculateurPrix();
     }
 
     ajouterInfoContrat(): void {
@@ -148,7 +274,8 @@ export class ControleurSae {
             this._form.mailClient.value = ligne.mel_cli.toString();
         }
     }
-    annulerNvlInter(): void {
+
+    viderZonesTextes(): void {
         const champsRempli: (HTMLInputElement | HTMLTextAreaElement)[] = [
             this.form.numInter,
             this.form.dateInter,
@@ -168,7 +295,15 @@ export class ControleurSae {
             champ.value = "";
         }
 
-        this._form.divNvlInter.hidden = true;
+        const tbody = this._form.tablePrestations.querySelector("tbody");
+
+        if (tbody) {
+            tbody.innerHTML = "";
+
+            this.calculateurPrix();
+        }
+
+        this.init(this.form);
     }
 
     verifierSaisie(): void {
@@ -176,7 +311,6 @@ export class ControleurSae {
             this.form.numInter,
             this.form.dateInter,
             this.form.objetInter,
-            this.form.observations,
             this.form.numContrat,
         ];
 
@@ -188,17 +322,22 @@ export class ControleurSae {
             }
         }
 
+        if (this._form.totalHT.value === "") {
+            bon = false;
+        }
+
         if (bon === true) {
             this.ajouterInter();
+        } else {
+            alert("Toutes les zones de saisies ne sont pas rempli");
         }
-        //else{afficher message "pas bon"}
     }
 
     ajouterInter(): void {
-        const requete =
+        const requete1 =
             "INSERT INTO intervention (num_interv, date_interv, objet_interv, obs_interv, num_cont) VALUES (?, ?, ?, ?, ?)";
 
-        const parametres = [
+        const parametres1 = [
             this._form.numInter.value,
             this._form.dateInter.value,
             this._form.objetInter.value,
@@ -206,13 +345,57 @@ export class ControleurSae {
             this._form.numContrat.value,
         ];
 
-        const succes = sqlWeb.SQLexec(requete, parametres);
+        const succes = sqlWeb.SQLexec(requete1, parametres1);
 
         if (succes) {
-            this._form.divNvlInter.hidden = true;
-            this.chargerInterventions();
+            const lignes =
+                this._form.tablePrestations.querySelectorAll("tbody tr");
+
+            lignes.forEach((element) => {
+                const tr = element as HTMLTableRowElement;
+
+                let requete2 =
+                    "INSERT INTO utilisation (num_interv, code_prest, qte_prest) VALUES (?, ?, ?)";
+                let parametres2 = [
+                    this._form.numInter.value,
+                    tr.cells[0].textContent,
+                    tr.cells[3].textContent,
+                ];
+
+                const succes2 = sqlWeb.SQLexec(requete2, parametres2);
+
+                if (succes2 && succes) {
+                    //test
+                    console.log(
+                        "\ntr.cells[0].textContent",
+                        tr.cells[0].textContent,
+                        "\ntr.cells[3].textContent",
+                        tr.cells[3].textContent,
+                    );
+                }
+            });
+        } else alert("Problème");
+
+        this.init(this._form);
+    }
+
+    modifierPresta() {
+        console.log("Modif");
+        const table = document.querySelector(
+            "#tablePrestations tbody",
+        ) as HTMLTableSectionElement;
+
+        const sIndex = table.querySelector(
+            "tr.selected",
+        ) as HTMLTableRowElement;
+
+        if (!sIndex) {
+            alert("Vous n'avez séléctionner aucune ligne");
         } else {
-            //message que ça n'a pas marché ?
+            console.log("ajout valeur");
+            this.ajouterOptionPrestation();
+            this._form.qtePrestation.value = sIndex.cells[3].textContent;
+            this._form.divPrestationForm.hidden = false;
         }
     }
 
@@ -226,7 +409,7 @@ export class ControleurSae {
         ) as HTMLTableRowElement;
 
         if (!ligneSelectionne) {
-            //afficher message "vous n'avez rien séléctionner"(pas d'alerte mais text HTML)
+            alert("Vous n'avez séléctionner aucune ligne");
         } else {
             const numInter = ligneSelectionne.cells[0].textContent;
             const numContrat = ligneSelectionne.cells[2].textContent;
@@ -274,6 +457,62 @@ export class ControleurSae {
             );
             this.form.mailClient.value = data[0]["mel_cli"];
 
+            let tbody = this._form.tablePrestations.querySelector("tbody");
+            if (tbody) {
+                tbody.innerHTML = "";
+
+                const prestationsLies = sqlWeb.SQLloadData(
+                    `SELECT u.code_prest, u.qte_prest, p.lib_prest, p.tarif_ht 
+             FROM utilisation u 
+             JOIN prestation p ON u.code_prest = p.code_prest 
+             WHERE u.num_interv = ?`,
+                    [numInter],
+                );
+
+                prestationsLies.forEach((prest) => {
+                    let tr: HTMLTableRowElement = document.createElement("tr");
+
+                    let tdPrest: HTMLTableCellElement =
+                        document.createElement("td");
+                    tdPrest.textContent = prest.code_prest;
+                    tr.appendChild(tdPrest);
+
+                    let tdLib: HTMLTableCellElement =
+                        document.createElement("td");
+                    tdLib.textContent = prest.lib_prest;
+                    tr.appendChild(tdLib);
+
+                    let tdPrixU: HTMLTableCellElement =
+                        document.createElement("td");
+                    tdPrixU.textContent = parseFloat(prest.tarif_ht).toFixed(2);
+                    tr.appendChild(tdPrixU);
+
+                    let tdQte: HTMLTableCellElement =
+                        document.createElement("td");
+                    tdQte.textContent = prest.qte_prest.toString();
+                    tr.appendChild(tdQte);
+
+                    let tdPrixT: HTMLTableCellElement =
+                        document.createElement("td");
+                    let prixTotal = (
+                        Number(prest.tarif_ht) * Number(prest.qte_prest)
+                    ).toFixed(2);
+                    tdPrixT.textContent = prixTotal;
+                    tr.appendChild(tdPrixT);
+
+                    tr.addEventListener("click", () => {
+                        this._form.tablePrestations
+                            .querySelectorAll("tbody tr")
+                            .forEach((r) => r.classList.remove("selected"));
+                        tr.classList.add("selected");
+                    });
+
+                    tbody.appendChild(tr);
+                });
+            }
+
+            this.calculateurPrix();
+
             this.afficherNvlInter("modif");
         }
     }
@@ -310,19 +549,52 @@ export class ControleurSae {
         return "0";
     }
 
-    // ajoutInfoClient() {
-    //     const client = this.form.numClient.value;
+    determinerDate(): string {
+        const demain = new Date();
+        demain.setDate(demain.getDate() + 1);
+        const dateFormatee = demain.toISOString().split("T")[0];
+        return dateFormatee;
+    }
 
-    //     let data = sqlWeb.SQLloadData(
-    //         "SELECT nom_cli, prenom_cli, tel_cli, mel_cli FROM client WHERE num_cli = ?",
-    //         [client],
-    //     );
+    supprimerInter(): void {
+        const table = document.querySelector(
+            "#table_intervention tbody",
+        ) as HTMLTableSectionElement;
 
-    //     this.form.nomClient.value = data[0]["nom_cli"];
-    //     this.form.prenomClient.value = data[0]["prenom_cli"];
-    //     this.form.telClient.value = data[0]["tel_cli"];
-    //     this.form.mailClient.value = data[0]["mel_cli"];
-    // }
+        const sIndex = table.querySelector(
+            "tr.selected",
+        ) as HTMLTableRowElement;
+
+        if (!sIndex) {
+            alert("Vous n'avez sélectionné aucune intervention.");
+            this.init(this.form);
+        } else {
+            const numInter = sIndex.cells[0].textContent;
+
+            const requeteUtilisation =
+                "DELETE FROM utilisation WHERE num_interv = ?";
+            const requeteIntervention =
+                "DELETE FROM intervention WHERE num_interv = ?";
+            const parametres = [numInter];
+
+            const succes1 = sqlWeb.SQLexec(requeteUtilisation, parametres);
+
+            if (succes1) {
+                const succes2 = sqlWeb.SQLexec(requeteIntervention, parametres);
+
+                if (succes2) {
+                    sIndex.remove();
+                    this.init(this._form);
+                } else {
+                    alert(
+                        "Erreur lors de la suppression de l'intervention en base de données.",
+                    );
+                }
+            } else {
+                alert("Erreur lors de la suppression des prestations liées.");
+            }
+        }
+    }
 }
 
 let sae = new ControleurSae();

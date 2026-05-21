@@ -8,6 +8,9 @@ sae.init({
 
     // Le conteneur (Id HTML est nvlInter, nom dans le type est divNvlInter)
     divNvlInter: document.getElementById("nvlInter") as HTMLDivElement,
+    divPrestationForm: document.getElementById(
+        "divPrestationForm",
+    ) as HTMLDivElement,
 
     // Section Intervention
     numInter: document.getElementById("numInter") as HTMLInputElement,
@@ -25,7 +28,9 @@ sae.init({
     infoSite: document.getElementById("infoSite") as HTMLTextAreaElement,
     numClient: document.getElementById("numClient") as HTMLInputElement,
     nomClient: document.getElementById("nomClient") as HTMLTextAreaElement,
-    prenomClient: document.getElementById("prenomClient") as HTMLTextAreaElement,
+    prenomClient: document.getElementById(
+        "prenomClient",
+    ) as HTMLTextAreaElement,
     telClient: document.getElementById("telClient") as HTMLTextAreaElement,
     mailClient: document.getElementById("mailClient") as HTMLTextAreaElement,
 
@@ -35,6 +40,19 @@ sae.init({
         "btnModifPresta",
     ) as HTMLInputElement,
     btnSuppPresta: document.getElementById("btnSuppPresta") as HTMLInputElement,
+    btnValiderPresta: document.getElementById(
+        "btnValiderPresta",
+    ) as HTMLInputElement,
+    btnAnnulerPresta: document.getElementById(
+        "btnAnnulerPresta",
+    ) as HTMLInputElement,
+    selectPrestation: document.getElementById(
+        "selectPrestation",
+    ) as HTMLSelectElement,
+    qtePrestation: document.getElementById("qtePrestation") as HTMLInputElement,
+    tablePrestations: document.getElementById(
+        "tablePrestations",
+    ) as HTMLTableElement,
 
     // Totaux
     totalHT: document.getElementById("totalHT") as HTMLInputElement,

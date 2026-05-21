@@ -6,6 +6,10 @@ body {
     padding: 15px;
 }
 
+[hidden] {
+    display: none !important;
+}
+
 /* ============================
    Titre Principal
    ============================ */
@@ -377,10 +381,18 @@ tbody tr:hover {
     justify-content: center;
 }
 
-.btn-icon.check { background-color: #5cb85c; }
-.btn-icon.check:hover { background-color: #4cae4c; }
-.btn-icon.cross { background-color: #d9534f; }
-.btn-icon.cross:hover { background-color: #c9302c; }
+.btn-icon.check {
+    background-color: #5cb85c;
+}
+.btn-icon.check:hover {
+    background-color: #4cae4c;
+}
+.btn-icon.cross {
+    background-color: #d9534f;
+}
+.btn-icon.cross:hover {
+    background-color: #c9302c;
+}
 
 /* ============================
    Actions Finales (Valider / Annuler)

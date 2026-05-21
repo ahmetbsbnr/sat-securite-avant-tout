@@ -4,8 +4,9 @@ export type SaeForm = {
     btnEdt: HTMLInputElement;
     btnSupp: HTMLInputElement;
 
-    // Le conteneur principal du formulaire
+    // Différent conteneurs
     divNvlInter: HTMLDivElement;
+    divPrestationForm: HTMLDivElement;
 
     // Section Intervention
     numInter: HTMLInputElement;
@@ -23,10 +24,17 @@ export type SaeForm = {
     telClient: HTMLTextAreaElement;
     mailClient: HTMLTextAreaElement;
 
+    // Elements de la section Prestation
+    tablePrestations: HTMLTableElement;
+    selectPrestation: HTMLSelectElement;
+    qtePrestation: HTMLInputElement;
+
     // Boutons de la section Prestation
     btnNvlPresta: HTMLInputElement;
     btnModifPresta: HTMLInputElement;
     btnSuppPresta: HTMLInputElement;
+    btnValiderPresta: HTMLInputElement;
+    btnAnnulerPresta: HTMLInputElement;
 
     // Champs de calcul (Inputs en readonly)
     totalHT: HTMLInputElement;
