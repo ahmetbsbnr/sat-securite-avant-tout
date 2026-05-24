@@ -23,6 +23,19 @@ export class ControleurSae {
         this._modeFormulaire = "ajout";
         this._lignePrestaEnModif = null;
 
+        // Restaurer champs éditables (si on vient du mode visu)
+        this._form.dateInter.readOnly = false;
+        this._form.objetInter.readOnly = false;
+        this._form.observations.readOnly = false;
+        this._form.numContrat.readOnly = false;
+
+        // Restaurer boutons
+        this._form.btnValider.hidden = false;
+        this._form.btnAnnuler.value = "Annuler";
+        this._form.btnNvlPresta.hidden = false;
+        this._form.btnModifPresta.hidden = false;
+        this._form.btnSuppPresta.hidden = false;
+
         this._form.divNvlInter.hidden = true;
         this.setListeVisible(true);
         this.cacherErreur("erreurListe");
@@ -125,8 +138,7 @@ export class ControleurSae {
                 let tdMontant: HTMLTableCellElement =
                     document.createElement("td");
                 let montantht = dataSet[k].montant_ht;
-                let montant = Number(montantht) * 1.1;
-                tdMontant.textContent = montant.toFixed(2).toString() + " €";
+                tdMontant.textContent = Number(montantht).toFixed(2) + " €";
                 tr.appendChild(tdMontant);
 
                 tr.addEventListener("click", () => {
@@ -353,7 +365,7 @@ export class ControleurSae {
 
         const result = sqlWeb.SQLloadData(
             `SELECT c.date_cont, c.adr_site, c.cp_site, c.ville_site,
-                    cl.num_cli, cl.nom_cli, cl.prenom_cli, cl.tel_cli, cl.mel_cli
+                    cl.num_cli, cl.civ_cli, cl.nom_cli, cl.prenom_cli, cl.tel_cli, cl.mel_cli
             FROM contrat c
             INNER JOIN client cl ON c.num_cli = cl.num_cli
             WHERE c.num_cont = ?`,
@@ -363,12 +375,19 @@ export class ControleurSae {
         if (result.length > 0) {
             const ligne = result[0];
 
-            this._form.dateCreaContrat.value = ligne.date_cont.toString();
+            const rawDate = ligne.date_cont.toString();
+            let dateFmt = rawDate;
+            if (rawDate.includes("-")) {
+                const [dy, dm, dd] = rawDate.split("-");
+                dateFmt = `${dd}/${dm}/${dy}`;
+            }
+            this._form.dateCreaContrat.value = rawDate;
             this._form.infoSite.value =
-                `${ligne.adr_site}\n${ligne.cp_site} ${ligne.ville_site}`;
+                `contrat créé le ${dateFmt}\n${ligne.adr_site}\n${ligne.cp_site} ${ligne.ville_site}`;
             this._form.numClient.value = ligne.num_cli.toString();
-            this._form.nomClient.value = ligne.nom_cli.toString();
-            this._form.prenomClient.value = ligne.prenom_cli.toString();
+            this._form.nomClient.value =
+                `${ligne.civ_cli || ""} ${ligne.nom_cli || ""} ${ligne.prenom_cli || ""}`.trim();
+            this._form.prenomClient.value = "";
             this._form.telClient.value = ligne.tel_cli
                 ? ligne.tel_cli.toString()
                 : "";
@@ -422,6 +441,17 @@ export class ControleurSae {
         const objetInter = this._form.objetInter.value.trim();
         const numContrat = this._form.numContrat.value.trim();
 
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const dateObj = new Date(dateInter + "T00:00:00");
+        if (!dateInter || dateObj <= today) {
+            this.afficherErreur(
+                "erreurFormulaire",
+                "La date doit être postérieure à la date du jour",
+            );
+            return;
+        }
+
         if (numContrat === "") {
             this.afficherErreur(
                 "erreurFormulaire",
@@ -458,7 +488,7 @@ export class ControleurSae {
         if (doublon) {
             this.afficherErreur(
                 "erreurFormulaire",
-                "Une intervention pour le contrat est déjà planifiée à la même date d'intervention",
+                "Une intervention pour le contrat est déjà planifié à la même date d'intervention",
             );
             return;
         }
@@ -705,58 +735,83 @@ export class ControleurSae {
 
         const numInter = ligneSelectionne.cells[0].textContent || "";
 
-        // Récupérer intervention
-        let data = sqlWeb.SQLloadData(
-            "SELECT i.date_interv, i.objet_interv, i.obs_interv, i.num_cont, co.num_cli, co.adr_site, co.ville_site, c.nom_cli, c.prenom_cli " +
-                "FROM intervention i JOIN contrat co ON i.num_cont = co.num_cont JOIN client c ON co.num_cli = c.num_cli WHERE i.num_interv = ?",
+        // Charger données intervention
+        const data = sqlWeb.SQLloadData(
+            "SELECT date_interv, objet_interv, obs_interv, num_cont FROM intervention WHERE num_interv = ?",
             [numInter],
         );
-
         if (!data || data.length === 0) {
             this.afficherErreur("erreurListe", "Détails introuvables pour cette intervention.");
             return;
         }
-
         const info = data[0];
 
-        const setVal = (id: string, val: string) => {
-            const el = document.getElementById(id) as HTMLInputElement | HTMLTextAreaElement | null;
-            if (el) el.value = val || "";
-        };
-
-        setVal("v_numInter", numInter);
+        // Peupler champs du formulaire
+        this._form.numInter.value = numInter;
         const rawInterv: string = info.date_interv || "";
-        if (rawInterv.includes("-")) {
-            const [y, m, d] = rawInterv.split("-");
-            setVal("v_dateInter", `${d}/${m}/${y}`);
-        } else {
-            setVal("v_dateInter", rawInterv);
+        this._form.dateInter.value = rawInterv;
+        this._form.objetInter.value = info.objet_interv || "";
+        this._form.observations.value = info.obs_interv || "";
+        this._form.numContrat.value = info.num_cont || "";
+
+        // Charger info contrat + client (site protégé, client)
+        this.ajouterInfoContrat();
+
+        // Rendre champs éditables en lecture seule
+        this._form.dateInter.readOnly = true;
+        this._form.objetInter.readOnly = true;
+        this._form.observations.readOnly = true;
+        this._form.numContrat.readOnly = true;
+
+        // Charger prestations liées
+        let tbody = this._form.tablePrestations.querySelector("tbody");
+        if (tbody) {
+            tbody.innerHTML = "";
+            const prestationsLiees = sqlWeb.SQLloadData(
+                "SELECT u.code_prest, u.qte_prest, p.lib_prest, COALESCE(tp.tarif_ht, 0) AS tarif_ht " +
+                "FROM utilisation u " +
+                "JOIN intervention i ON i.num_interv = u.num_interv " +
+                "JOIN prestation p ON u.code_prest = p.code_prest " +
+                "LEFT JOIN tarifer_prestation tp ON u.code_prest = tp.code_prest " +
+                "   AND tp.date_debut = (SELECT MAX(date_debut) FROM tarifer_prestation WHERE code_prest = u.code_prest AND date_debut <= i.date_interv) " +
+                "WHERE u.num_interv = ?",
+                [numInter],
+            );
+            prestationsLiees.forEach((prest) => {
+                let tr: HTMLTableRowElement = document.createElement("tr");
+                let tdPrest = document.createElement("td"); tdPrest.textContent = prest.code_prest; tr.appendChild(tdPrest);
+                let tdLib = document.createElement("td"); tdLib.textContent = prest.lib_prest; tr.appendChild(tdLib);
+                let tdPrixU = document.createElement("td"); tdPrixU.textContent = parseFloat(prest.tarif_ht).toFixed(2); tr.appendChild(tdPrixU);
+                let tdQte = document.createElement("td"); tdQte.textContent = prest.qte_prest.toString(); tr.appendChild(tdQte);
+                let tdPrixT = document.createElement("td"); tdPrixT.textContent = (Number(prest.tarif_ht) * Number(prest.qte_prest)).toFixed(2); tr.appendChild(tdPrixT);
+                tbody.appendChild(tr);
+            });
         }
-        setVal("v_objetInter", info.objet_interv || "");
-        setVal("v_observations", info.obs_interv || "");
-        setVal("v_numContrat", info.num_cont || "");
-        setVal("v_client", (info.nom_cli ? info.nom_cli + ' ' : '') + (info.prenom_cli || ''));
+        this.calculateurPrix();
 
-        // Calculer total TTC
-        const prestations = sqlWeb.SQLloadData(
-            `SELECT u.code_prest, u.qte_prest, p.lib_prest, p.tarif_ht FROM utilisation u JOIN prestation p ON u.code_prest = p.code_prest WHERE u.num_interv = ?`,
-            [numInter],
-        );
+        // Cacher boutons prestation et formulaire prestation
+        this._form.btnNvlPresta.hidden = true;
+        this._form.btnModifPresta.hidden = true;
+        this._form.btnSuppPresta.hidden = true;
+        this._form.divPrestationForm.hidden = true;
 
-        let montantTotal = 0;
-        for (let p of prestations) {
-            montantTotal += Number(p.tarif_ht) * Number(p.qte_prest);
-        }
-        setVal("v_totalTTC", (montantTotal * 1.1).toFixed(2));
+        // Cacher Valider, renommer Annuler → Retour
+        this._form.btnValider.hidden = true;
+        this._form.btnAnnuler.value = "Retour";
+        this._form.btnAnnuler.onclick = () => this.init(this._form);
 
-        // Afficher modal
-        const modal = document.getElementById("modalDetail");
-        if (modal) modal.classList.remove("hidden");
+        // Titre
+        const titre = document.querySelector("#nvlInter h2") as HTMLHeadingElement | null;
+        if (titre) titre.textContent = "Détail d'une intervention";
 
-        const btnClose = document.getElementById("btnCloseVisu");
-        if (btnClose) btnClose.onclick = () => {
-            if (modal) modal.classList.add("hidden");
-        };
+        // Désactiver listener contrat (lecture seule)
+        this._form.numContrat.onkeydown = null;
+        this._form.numContrat.onblur = null;
+
+        // Afficher formulaire, cacher liste
+        this._form.divNvlInter.hidden = false;
+        this.setListeVisible(false);
+        this.cacherErreur("erreurPrestaAction");
     }
 
     determinerNumInter(): string {

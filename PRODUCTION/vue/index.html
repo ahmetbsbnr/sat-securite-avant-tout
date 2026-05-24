@@ -83,7 +83,7 @@
                             <label for="numContrat">Numero du contrat</label>
                             <input type="text" id="numContrat" />
                         </div>
-                        <div class="txtinput">
+                        <div class="txtinput" hidden>
                             <label for="dateCreaContrat">Date création du contrat</label>
                             <textarea
                                 id="dateCreaContrat"
@@ -93,7 +93,7 @@
                             ></textarea>
                         </div>
                         <div class="txtinput">
-                            <label for="infoSite">Informations du site</label>
+                            <label for="infoSite">Site protégé</label>
                             <textarea
                                 id="infoSite"
                                 rows="4"
@@ -113,7 +113,7 @@
                             ></textarea>
                         </div>
                         <div class="txtinput">
-                            <label for="nomClient">Nom du client</label>
+                            <label for="nomClient">Client</label>
                             <textarea
                                 id="nomClient"
                                 readonly
@@ -121,7 +121,7 @@
                                 class="display-field"
                             ></textarea>
                         </div>
-                        <div class="txtinput">
+                        <div class="txtinput" hidden>
                             <label for="prenomClient">Prenom du client</label>
                             <textarea
                                 id="prenomClient"
@@ -260,46 +260,6 @@
                     type="button"
                     value="Annuler"
                 />
-            </div>
-        </div>
-
-        <!-- Modal de visualisation (lecture seule) -->
-        <div id="modalDetail" class="modal hidden">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3>Détails de l'intervention</h3>
-                    <button id="btnCloseVisu" class="btn-icon cross">✖</button>
-                </div>
-                <div class="modal-body">
-                    <div class="txtinput">
-                        <p>Numero d'intervention</p>
-                        <input type="text" id="v_numInter" readonly class="display-field" />
-                    </div>
-                    <div class="txtinput">
-                        <p>Date de l'intervention</p>
-                        <input type="text" id="v_dateInter" readonly class="display-field" />
-                    </div>
-                    <div class="txtinput">
-                        <p>Objet</p>
-                        <input type="text" id="v_objetInter" readonly class="display-field" />
-                    </div>
-                    <div class="txtinput txtinput_obs">
-                        <p>Observations</p>
-                        <textarea id="v_observations" rows="4" readonly class="display-field-area"></textarea>
-                    </div>
-                    <div class="txtinput">
-                        <p>Numero contrat</p>
-                        <input type="text" id="v_numContrat" readonly class="display-field" />
-                    </div>
-                    <div class="txtinput">
-                        <p>Client</p>
-                        <input type="text" id="v_client" readonly class="display-field" />
-                    </div>
-                    <div class="txtinput">
-                        <p>Total TTC (€)</p>
-                        <input type="text" id="v_totalTTC" readonly class="display-field" />
-                    </div>
-                </div>
             </div>
         </div>
 
