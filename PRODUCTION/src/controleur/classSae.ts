@@ -64,12 +64,13 @@ export class ControleurSae {
     chargerInterventions(): void {
         let dataSet: TdataSet = sqlWeb.SQLloadData(
             "SELECT i.num_interv, i.date_interv, i.num_cont, co.ville_site, c.num_cli, c.nom_cli, " +
-                "COALESCE(SUM(p.tarif_ht * u.qte_prest), 0) AS montant_ht " +
+                "COALESCE(SUM(tp.tarif_ht * u.qte_prest), 0) AS montant_ht " +
                 "FROM intervention i " +
                 "JOIN contrat co ON i.num_cont = co.num_cont " +
                 "JOIN client c ON co.num_cli = c.num_cli " +
                 "LEFT JOIN utilisation u ON i.num_interv = u.num_interv " +
-                "LEFT JOIN prestation p ON u.code_prest = p.code_prest " +
+                "LEFT JOIN tarifer_prestation tp ON u.code_prest = tp.code_prest " +
+                "   AND tp.date_debut = (SELECT MAX(date_debut) FROM tarifer_prestation WHERE code_prest = u.code_prest AND date_debut <= i.date_interv) " +
                 "GROUP BY i.num_interv, i.date_interv, i.num_cont, co.ville_site, c.num_cli, c.nom_cli " +
                 "ORDER BY i.num_interv",
             [],
@@ -158,8 +159,11 @@ export class ControleurSae {
         }
 
         const data = sqlWeb.SQLloadData(
-            `SELECT prestation.code_prest, prestation.lib_prest, prestation.tarif_ht
-            FROM prestation`,
+            "SELECT p.code_prest, p.lib_prest, COALESCE(tp.tarif_ht, 0) AS tarif_ht " +
+            "FROM prestation p " +
+            "LEFT JOIN tarifer_prestation tp ON tp.code_prest = p.code_prest " +
+            "   AND tp.date_debut = (SELECT MAX(date_debut) FROM tarifer_prestation WHERE code_prest = p.code_prest) " +
+            "ORDER BY p.lib_prest, p.code_prest",
             [],
         );
 
@@ -288,9 +292,11 @@ export class ControleurSae {
         }
 
         const data = sqlWeb.SQLloadData(
-            `SELECT prestation.code_prest, prestation.lib_prest, prestation.tarif_ht
-            FROM prestation
-            WHERE prestation.code_prest = ?`,
+            "SELECT p.code_prest, p.lib_prest, COALESCE(tp.tarif_ht, 0) AS tarif_ht " +
+            "FROM prestation p " +
+            "LEFT JOIN tarifer_prestation tp ON tp.code_prest = p.code_prest " +
+            "   AND tp.date_debut = (SELECT MAX(date_debut) FROM tarifer_prestation WHERE code_prest = p.code_prest) " +
+            "WHERE p.code_prest = ?",
             [codeSelectionne],
         );
 
@@ -629,10 +635,13 @@ export class ControleurSae {
             tbody.innerHTML = "";
 
             const prestationsLiees = sqlWeb.SQLloadData(
-                `SELECT u.code_prest, u.qte_prest, p.lib_prest, p.tarif_ht
-             FROM utilisation u
-             JOIN prestation p ON u.code_prest = p.code_prest
-             WHERE u.num_interv = ?`,
+                "SELECT u.code_prest, u.qte_prest, p.lib_prest, COALESCE(tp.tarif_ht, 0) AS tarif_ht " +
+                "FROM utilisation u " +
+                "JOIN intervention i ON i.num_interv = u.num_interv " +
+                "JOIN prestation p ON u.code_prest = p.code_prest " +
+                "LEFT JOIN tarifer_prestation tp ON u.code_prest = tp.code_prest " +
+                "   AND tp.date_debut = (SELECT MAX(date_debut) FROM tarifer_prestation WHERE code_prest = u.code_prest AND date_debut <= i.date_interv) " +
+                "WHERE u.num_interv = ?",
                 [numInter],
             );
 
