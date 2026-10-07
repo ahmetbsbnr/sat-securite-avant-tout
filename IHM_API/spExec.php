@@ -7,21 +7,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') { exit(0); }
 // à installer sur votre serveur local
 // dans dossier web
 // puis dans /ihm/IHM_API/
-	
+
 	require_once ("./MyConnexionBdd.class.php");
 
 	function bdOpen ($host, $port, $bdname, $user, $pwd, $charset, $driver)
 	{
-		return MyConnexion::getInstance($host, $port, $bdname, $user, $pwd, $charset, $driver);		
+		return MyConnexion::getInstance($host, $port, $bdname, $user, $pwd, $charset, $driver);
 	}
-	
-	function resultat ($sp)      
+
+	function resultat ($sp)
 	{
 		$data = [];
 	    $t = [];
 	    while ($row = $sp->fetch(PDO::FETCH_ASSOC))
-		{		
-			$t[]=$row;	
+		{
+			$t[]=$row;
 		}
 		$data['resultat'] = $t;
 
@@ -45,7 +45,7 @@ try {
 		exit(0);
 	}
 
-	$lesparams = json_decode(urldecode($_POST['params']));	
+	$lesparams = json_decode(urldecode($_POST['params']));
 	$sp = $bdd->prepare($_POST['sp']);
 	if ($lesparams != "") {
 	   for($i=0;$i<count($lesparams);$i++) {
@@ -65,7 +65,5 @@ try {
 		'erreur' => $e->getMessage(),
 	]);
 }
-
-
 
 ?>

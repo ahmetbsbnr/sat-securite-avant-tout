@@ -5,3 +5,5 @@ tsconfig.tsbuildinfo
 # TypeScript transpilation outputs
 PRODUCTION/**/*.js
 PRODUCTION/**/*.js.map
+.vscode/
+node_modules/
