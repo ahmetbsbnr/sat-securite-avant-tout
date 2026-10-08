@@ -56,6 +56,19 @@ CREATE TABLE `prestation` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- ----------------------------
+--  Table structure for `tarifer_prestation`
+--  Historique des tarifs : le tarif appliqué à une intervention est le
+--  dernier dont la date de début précède la date de l'intervention.
+-- ----------------------------
+DROP TABLE IF EXISTS `tarifer_prestation`;
+CREATE TABLE `tarifer_prestation` (
+  `code_prest` varchar(6) NOT NULL,
+  `date_debut` date NOT NULL,
+  `tarif_ht` decimal(7,2) NOT NULL,
+  PRIMARY KEY (`code_prest`,`date_debut`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- ----------------------------
 --  Table structure for `utilisation`
 -- ----------------------------
 DROP TABLE IF EXISTS `utilisation`;
@@ -69,8 +82,9 @@ CREATE TABLE `utilisation` (
 -- ----------------------------
 --  Records 
 -- ----------------------------
-INSERT INTO `client` VALUES ('1','M.','CHAPLIN','Mathieu','0606060606','mat@exemple.com'), ('2','M.','STAUB','Fabien','0607070707','fab@exemple.com'), ('3','Mme','RENAULT','Megane','0612345678','megane@me.com'), ('4','M.','SAXO','Faune','0612211221','saxofaune@gmail.com'), ('5','M.','BROS','Mario','0632132121','mario@bros.com'), ('6','M.','GIRARD','Jean','0678451241','girard@gmail.com');
+INSERT INTO `client` VALUES ('1','M.','CHAPLIN','Mathieu','0606060606','mat@exemple.com'), ('2','M.','STAUB','Fabien','0607070707','fab@exemple.com'), ('3','Mme','RENAULT','Megane','0612345678','megane@exemple.com'), ('4','M.','SAXO','Faune','0612211221','saxofaune@exemple.com'), ('5','M.','BROS','Mario','0632132121','mario@exemple.com'), ('6','M.','GIRARD','Jean','0678451241','girard@exemple.com');
 INSERT INTO `contrat` VALUES ('1','1','2019-03-24','1 rue de Mars','Metz','57000','0363524137'), ('2','2','2018-06-16','2 rue des Bois','Thionville','57100','036545698'), ('3','1','2018-10-12','10 rue des Lisières','Nancy','54000','0332321232'), ('4','3','2020-07-04','3 rue de Metz','Metz','57000','0365456964'), ('5','5','2021-10-09','10 rue du Champignon','Boulay','57220','0198745632'), ('6','1','2019-11-27','2c rue de la GrandeForme','Paris','75006','0189745212'), ('7','4','2019-03-09','5 allée du Logis des Vacances','Epinal','88000','0321548596'), ('8','6','2017-05-02','2 rue des Rois','Nancy','57100','0352415689'), ('9','3','2018-12-15','46 avenue de la Mer','Nice','06000','0465456964');
 INSERT INTO `intervention` VALUES ('9','6','2026-05-22','changement matériel',''), ('8','8','2025-05-20','panne diverse',''), ('7','3','2025-09-15','installation','aucun problème'), ('6','1','2025-09-10','panne diverse',''), ('5','5','2025-11-02','installation','RAS'), ('4','1','2025-05-26','dégradations volontaires','dégradations multiples'), ('3','3','2025-05-24','mise à  jour',''), ('2','2','2025-05-20','changement matériel',''), ('1','1','2025-05-20','mise à  jour',''), ('10','8','2025-05-20','dégradations volontaires','');
 INSERT INTO `prestation` VALUES ('CENTR','centrale','180.00'), ('DGCOD','clavier digicode','50.00'), ('DPLAC','forfait déplacement avec 1ère heure MO','92.00'), ('DTCFM','détecteur de fumée','30.00'), ('DTCOV','détecteur d\'ouverture','28.00'), ('DTCPR','détecteur de présence','25.00'), ('MO','main d\'oeuvre 1/2 heure','75.00'), ('TLCDE','télécommande','30.00');
 INSERT INTO `utilisation` VALUES ('1','CENTR','1'), ('1','DTCOV','2'), ('1','MO','1'), ('2','MO','3'), ('2','DTCFM','3'), ('2','DPLAC','1'), ('3','MO','1'), ('4','DTCPR','1'), ('4','MO','2'), ('5','DTCPR','1'), ('6','CENTR','1'), ('7','DGCOD','1'), ('7','DPLAC','1'), ('8','CENTR','1'), ('8','DPLAC','1'), ('8','DTCFM','2'), ('9','DPLAC','1'), ('9','TLCDE','1'), ('10','DPLAC','1'), ('10','DTCOV','1'), ('10','DTCPR','1'), ('10','MO','1');
+INSERT INTO `tarifer_prestation` VALUES ('CENTR','2017-01-01','180.00'), ('DGCOD','2017-01-01','50.00'), ('DPLAC','2017-01-01','92.00'), ('DTCFM','2017-01-01','30.00'), ('DTCOV','2017-01-01','28.00'), ('DTCPR','2017-01-01','25.00'), ('MO','2017-01-01','75.00'), ('TLCDE','2017-01-01','30.00');

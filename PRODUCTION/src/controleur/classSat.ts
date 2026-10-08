@@ -137,8 +137,9 @@ export class ControleurSat {
 
                 let tdMontant: HTMLTableCellElement =
                     document.createElement("td");
-                let montantht = dataSet[k].montant_ht;
-                tdMontant.textContent = Number(montantht).toFixed(2) + " €";
+                // Même règle que le détail d'une intervention : TVA 10 %, TTC = HT × 1,1.
+                let montantTtc = Number(dataSet[k].montant_ht) * 1.1;
+                tdMontant.textContent = montantTtc.toFixed(2) + " €";
                 tr.appendChild(tdMontant);
 
                 tr.addEventListener("click", () => {
