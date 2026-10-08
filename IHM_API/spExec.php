@@ -1,5 +1,20 @@
 <?php
-header("Access-Control-Allow-Origin: *");
+// Sécurité : cette API exécute les requêtes SQL envoyées par le client.
+// Elle est réservée à un usage local : requêtes distantes refusées et
+// CORS limité aux pages servies depuis localhost (quel que soit le port).
+if (!in_array($_SERVER['REMOTE_ADDR'] ?? '', ['127.0.0.1', '::1'], true)) {
+	http_response_code(403);
+	exit('{}');
+}
+$origine = $_SERVER['HTTP_ORIGIN'] ?? '';
+if ($origine !== '') {
+	if (!preg_match('#^https?://(localhost|127\.0\.0\.1)(:\d+)?$#', $origine)) {
+		http_response_code(403);
+		exit('{}');
+	}
+	header("Access-Control-Allow-Origin: " . $origine);
+	header("Vary: Origin");
+}
 header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
 header("Content-Type: application/json; charset=UTF-8");

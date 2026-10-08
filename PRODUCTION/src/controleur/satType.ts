@@ -1,4 +1,4 @@
-export type SaeForm = {
+export type SatForm = {
     // Boutons de navigation
     btnAjt: HTMLInputElement;
     btnEdt: HTMLInputElement;

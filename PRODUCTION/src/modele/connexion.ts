@@ -1,8 +1,12 @@
+
 import { sqlWeb } from "./sqlWeb.js";
 
+// Configuration locale (ex. XAMPP) : projet copié dans htdocs/sat/
+// et base importée depuis BDD/bdsat.sql.
+// Adapter les chemins et identifiants à votre environnement.
 sqlWeb.init(
-    "http://localhost/sat/",
-    "http://localhost/sat/"
+    "http://localhost/sat/PRODUCTION/vue/",
+    "http://localhost/sat/IHM_API/"
 );
 
 class Connexion {
@@ -15,8 +19,8 @@ class Connexion {
             "localhost",
             "3306",
             "bdsat",
-            "appli",
-            "***SUPPRIME***",
+            "root",
+            "",
             "utf8",
         );
     }

@@ -2,10 +2,10 @@ import { sqlWeb } from "../modele/sqlWeb.js";
 import "../modele/connexion.js"; //ouverture BD
 import { TdataSet, TtabAsso } from "../modele/sqlWeb.js";
 import { InterventionRepository } from "../modele/repositories.js";
-import { SaeForm } from "./saeType.js";
+import { SatForm } from "./satType.js";
 
-export class ControleurSae {
-    private _form!: SaeForm;
+export class ControleurSat {
+    private _form!: SatForm;
     private _modeFormulaire: "ajout" | "modif" = "ajout";
     private _lignePrestaEnModif: HTMLTableRowElement | null = null;
 
@@ -18,7 +18,7 @@ export class ControleurSae {
         if (erreurListe) erreurListe.hidden = !visible;
     }
 
-    init(form: SaeForm): void {
+    init(form: SatForm): void {
         this._form = form;
         this._modeFormulaire = "ajout";
         this._lignePrestaEnModif = null;
@@ -892,5 +892,5 @@ export class ControleurSae {
     }
 }
 
-let sae = new ControleurSae();
-export { sae };
+let sat = new ControleurSat();
+export { sat };

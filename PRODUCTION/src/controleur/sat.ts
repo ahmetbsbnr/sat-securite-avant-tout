@@ -1,6 +1,6 @@
-import { sae } from "./classSae.js";
+import { sat } from "./classSat.js";
 
-sae.init({
+sat.init({
     // Boutons principaux
     btnAjt: document.getElementById("btnAjt") as HTMLInputElement,
     btnEdt: document.getElementById("btnEdt") as HTMLInputElement,
